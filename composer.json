@@ -1,0 +1,29 @@
+{
+  "name": "sebastiansulinski/php-backup",
+  "description": "Simple package for backing up databases, files and directories to Dropbox and Ftp.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastian Sulinski",
+      "email": "info@ssdtutorials.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.4.0",
+    "league/flysystem": "^1.0",
+    "sebastiansulinski/dotenv": "^0.0.1",
+    "league/flysystem-dropbox": "^1.0",
+    "nesbot/carbon": "^1.21",
+    "backup-manager/backup-manager": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SSD\\": "src/",
+      "SSDTest\\": "tests/"
+    }
+  }
+}
