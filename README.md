@@ -175,5 +175,4 @@ $backup->run();
 
 ## TODO
 
-- write remaining tests
 - write step-by-step instructions
