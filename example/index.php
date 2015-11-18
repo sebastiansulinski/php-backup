@@ -37,59 +37,72 @@ $dotenv->required([
 // working directory
 $workingDirectory = __DIR__ . '/tmp';
 
-$remote = new Dropbox(
-    getenv('DROPBOX_OAUTH'),
-    getenv('DROPBOX_SECRET')
-);
+try {
+
+    $remote = new Dropbox(
+        getenv('DROPBOX_OAUTH'),
+        getenv('DROPBOX_SECRET')
+    );
 
 
-//$remote = new Ftp(
-//    getenv('FTP_HOST'),
-//    getenv('FTP_USER'),
-//    getenv('FTP_PASS'),
-//    [
-//        'root' => 'public_html'
-//    ]
-//);
+    //$remote = new Ftp(
+    //    getenv('FTP_HOST'),
+    //    getenv('FTP_USER'),
+    //    getenv('FTP_PASS'),
+    //    [
+    //        'root' => 'public_html'
+    //    ]
+    //);
 
 
-$backup = new Backup(
-    $remote,
-    $workingDirectory
-);
+    $backup = new Backup(
+        $remote,
+        $workingDirectory
+    );
 
-// directory to which backup should be saved on the remote server
-$backup->setRemoteDirectory(getenv('DOMAIN_NAME'));
+    // directory to which backup should be saved on the remote server
+    $backup->setRemoteDirectory(getenv('DOMAIN_NAME'));
 
-// keep only 7 backups then overwrite the oldest one
-$backup->setNumberOfBackups(7);
+    // keep only 7 backups then overwrite the oldest one
+    $backup->setNumberOfBackups(7);
 
-// add MySQL database to the backup
-$backup->addJob(new Job(
-    new MySQLDatabase([
-        'host' => getenv('DB_HOST'),
-        'name' => getenv('DB_NAME'),
-        'user' => getenv('DB_USER'),
-        'password' => getenv('DB_PASS')
-    ]),
-    'database'
-));
+    // add MySQL database to the backup
+    $backup->addJob(new Job(
+        new MySQLDatabase([
+            'host' => getenv('DB_HOST'),
+            'name' => getenv('DB_NAME'),
+            'user' => getenv('DB_USER'),
+            'password' => getenv('DB_PASS')
+        ]),
+        'database'
+    ));
 
-// add single file ot the backup
-$backup->addJob(new Job(
-    new File(
-        __DIR__ . '/files/text.txt',
-        __DIR__
-    )
-));
+    // add single file ot the backup
+    $backup->addJob(new Job(
+        new File(
+            __DIR__ . '/files/text.txt',
+            __DIR__
+        )
+    ));
 
-// add the entire directory to the backup
-$backup->addJob(new Job(
-    new Directory(
-        __DIR__ . '/files/css',
-        __DIR__ . '/files'
-    )
-));
+    // add the entire directory to the backup
+    $backup->addJob(new Job(
+        new Directory(
+            __DIR__ . '/files',
+            __DIR__,
+            [
+                'files/css'
+            ]
+        )
+    ));
 
-// run backup
-$backup->run();
+    // run backup
+    $backup->run();
+
+} catch (Exception $e) {
+
+    $file = $workingDirectory . DIRECTORY_SEPARATOR . 'error_log';
+
+    file_put_contents($file, $e->getMessage() . PHP_EOL, FILE_APPEND | LOCK_EX);
+
+}

@@ -22,12 +22,6 @@ use SSD\Backup\Processors\Cleanup as CleanupProcessor;
 
 class Backup
 {
-
-    /**
-     * System's native directory separator.
-     */
-    const DS = DIRECTORY_SEPARATOR;
-
     /**
      * Remote object instance.
      *
@@ -198,7 +192,7 @@ class Backup
      */
     public function archivePath()
     {
-        return $this->getLocalWorkingDirectory() . self::DS . $this->getArchiveName();
+        return $this->getLocalWorkingDirectory() . DIRECTORY_SEPARATOR . $this->getArchiveName();
     }
 
     /**

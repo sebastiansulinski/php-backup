@@ -94,7 +94,7 @@ try {
 
 } catch (Exception $e) {
 
-    $file = $workingDirectory . DS . 'error_log';
+    $file = $workingDirectory . DIRECTORY_SEPARATOR . 'error_log';
 
     file_put_contents($file, $e->getMessage() . PHP_EOL, FILE_APPEND | LOCK_EX);
 
@@ -186,7 +186,7 @@ try {
 
 } catch (Exception $e) {
 
-    $file = $workingDirectory . DS . 'error_log';
+    $file = $workingDirectory . DIRECTORY_SEPARATOR . 'error_log';
 
     file_put_contents($file, $e->getMessage() . PHP_EOL, FILE_APPEND | LOCK_EX);
 

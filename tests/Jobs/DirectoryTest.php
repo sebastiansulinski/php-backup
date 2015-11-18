@@ -101,4 +101,33 @@ class DirectoryTest extends BaseCase
         $this->assertFalse($directory->asset());
     }
 
+    /**
+     * @test
+     */
+    public function empty_exclusions()
+    {
+        $directory = new Directory(
+            $this->css_components_directory(),
+            $this->css_components_directory()
+        );
+
+        $this->assertEmpty($directory->exclude);
+    }
+
+    /**
+     * @test
+     */
+    public function exclusions_not_empty()
+    {
+        $directory = new Directory(
+            $this->css_directory(),
+            $this->css_directory(),
+            [
+                $this->css_components_directory()
+            ]
+        );
+
+        $this->assertCount(1, $directory->exclude);
+    }
+
 }
