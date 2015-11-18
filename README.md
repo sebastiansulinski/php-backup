@@ -80,11 +80,15 @@ try {
         'files'
     ));
 
-    // add the entire directory to the backup
+    // add the 'files' directory to the backup
+    // but exclude the 'css' directory within
     $backup->addJob(new Job(
         new Directory(
-            __DIR__ . '/files/css',
-            __DIR__ . '/files'
+            __DIR__ . '/files',
+            __DIR__,
+            [
+                'files/css'
+            ]
         ),
         'files'
     ));
