@@ -71,7 +71,7 @@ try {
         'database'
     ));
 
-    // add single file ot the backup
+    // add single file to the backup
     $backup->addJob(new Job(
         new File(
             __DIR__ . '/files/text.txt',
@@ -167,7 +167,7 @@ try {
         'database'
     ));
 
-    // add single file ot the backup
+    // add single file to the backup
     $backup->addJob(new Job(
         new File(
             __DIR__ . '/files/text.txt',
@@ -196,7 +196,3 @@ try {
 
 }
 ```
-
-## TODO
-
-- write step-by-step instructions
