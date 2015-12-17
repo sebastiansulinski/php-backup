@@ -11,6 +11,9 @@ This package makes use of
 
 ## Usage examples
 
+You can watch this [video tutorial](https://ssdtutorials.com/courses/dropbox-backup) or read below.
+
+
 ### Backing up to Dropbox
 
 ```
