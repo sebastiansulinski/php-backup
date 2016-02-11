@@ -1,5 +1,7 @@
 <?php namespace SSD\Backup\Processors;
 
+use BackupManager\Filesystems\Destination;
+
 use SSD\Backup\Backup;
 use SSD\Backup\Contracts\Processor;
 use SSD\Backup\Contracts\Database as DatabaseContract;
@@ -89,7 +91,13 @@ class Database implements Processor
 
         $manager = new Manager($filesystems, $databases, $compressors);
 
-        $manager->makeBackup()->run('config', 'local', $database->fileName(), 'null');
+        $manager->makeBackup()->run(
+            'config',
+            [
+                new Destination('local', $database->fileName())
+            ],
+            'null'
+        );
 
         $this->backup->addToCollection(
             [
