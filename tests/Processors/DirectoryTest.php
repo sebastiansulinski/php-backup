@@ -1,6 +1,6 @@
 <?php namespace SSDTest\Processors;
 
-use PHPUnit_Framework_Error;
+use TypeError;
 
 use SSDTest\BaseCase;
 use SSD\Backup\Backup;
@@ -13,7 +13,7 @@ class DirectoryTest extends BaseCase
     /**
      * @test
      *
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException TypeError
      */
     public function throws_error_without_both_valid_arguments()
     {
@@ -23,7 +23,7 @@ class DirectoryTest extends BaseCase
     /**
      * @test
      *
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException TypeError
      */
     public function throws_error_without_second_valid_arguments()
     {

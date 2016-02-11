@@ -1,6 +1,6 @@
 <?php namespace SSDTest\Processors;
 
-use PHPUnit_Framework_Error;
+use TypeError;
 use ZipArchive;
 
 use SSDTest\BaseCase;
@@ -16,7 +16,7 @@ class CleanupTest extends BaseCase
     /**
      * @test
      *
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException TypeError
      */
     public function throws_error_without_valid_argument()
     {
