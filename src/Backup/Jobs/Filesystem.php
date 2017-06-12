@@ -1,30 +1,34 @@
-<?php namespace SSD\Backup\Jobs;
+<?php
+
+namespace SSD\Backup\Jobs;
 
 
-abstract class Filesystem
+use SSD\Backup\Contracts\Job as JobContract;
+
+abstract class Filesystem implements JobContract
 {
     /**
      * Absolute path with file / directory name.
      *
      * @var string
      */
-    protected $fullPath;
+    protected $fullPath = '';
 
     /**
      * Absolute path to the root directory.
      *
-     * @var null|string
+     * @var string
      */
-    protected $rootPath;
+    protected $rootPath = '';
 
     /**
      * Extract and return asset path starting from root directory.
      *
-     * @return mixed
+     * @return string
      */
-    public function asset()
+    public function asset() : string
     {
-        if (is_null($this->rootPath)) {
+        if ($this->rootPath === '') {
 
             $partials = explode('/', $this->fullPath);
 
@@ -38,9 +42,9 @@ abstract class Filesystem
     /**
      * Get full path.
      *
-     * @return mixed
+     * @return string
      */
-    public function fullPath()
+    public function fullPath() : string
     {
         return $this->fullPath;
     }
@@ -48,11 +52,10 @@ abstract class Filesystem
     /**
      * Get root path.
      *
-     * @return mixed
+     * @return string
      */
-    public function rootPath()
+    public function rootPath() : string
     {
         return $this->rootPath;
     }
-
 }

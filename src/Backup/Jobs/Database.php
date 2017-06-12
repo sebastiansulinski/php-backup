@@ -1,11 +1,15 @@
-<?php namespace SSD\Backup\Jobs;
+<?php
 
+namespace SSD\Backup\Jobs;
+
+
+use SSD\Backup\Contracts\Job as JobContract;
+
+use Carbon\Carbon;
 use ReflectionClass;
 use InvalidArgumentException;
 
-use Carbon\Carbon;
-
-abstract class Database
+abstract class Database implements JobContract
 {
     /**
      * Host name.
@@ -51,6 +55,7 @@ abstract class Database
 
     /**
      * Database constructor.
+     *
      * @param array $params
      */
     public function __construct(array $params = [])
@@ -72,14 +77,20 @@ abstract class Database
         }
     }
 
+    /**
+     * Database type.
+     *
+     * @return string
+     */
+    abstract public function type() : string;
 
     /**
      * Set database host.
      *
      * @param $host
-     * @return $this
+     * @return self
      */
-    public function setHost($host)
+    public function setHost($host) : self
     {
         $this->host = $host;
 
@@ -90,9 +101,9 @@ abstract class Database
      * Set database name.
      *
      * @param $name
-     * @return $this
+     * @return self
      */
-    public function setName($name)
+    public function setName($name) : self
     {
         $this->name = $name;
 
@@ -103,9 +114,9 @@ abstract class Database
      * Set database username.
      *
      * @param $user
-     * @return $this
+     * @return self
      */
-    public function setUser($user)
+    public function setUser($user) : self
     {
         $this->user = $user;
 
@@ -116,9 +127,9 @@ abstract class Database
      * Set database password.
      *
      * @param $password
-     * @return $this
+     * @return self
      */
-    public function setPassword($password)
+    public function setPassword($password) : self
     {
         $this->password = $password;
 
@@ -129,9 +140,9 @@ abstract class Database
      * Set database port.
      *
      * @param $port
-     * @return $this
+     * @return self
      */
-    public function setPort($port)
+    public function setPort($port) : self
     {
         $this->port = $port;
 
@@ -142,9 +153,9 @@ abstract class Database
      * Set export file name.
      *
      * @param $name
-     * @return $this
+     * @return self
      */
-    public function setFileName($name)
+    public function setFileName($name) : self
     {
         $this->file_name = $name;
 
@@ -154,9 +165,9 @@ abstract class Database
     /**
      * Get export file name.
      *
-     * @return null|string
+     * @return string
      */
-    public function fileName()
+    public function fileName() : string
     {
         if (is_null($this->file_name)) {
             $this->file_name = $this->name . '_' . Carbon::now()->format('Y-m-d_H-i-s');
@@ -170,7 +181,7 @@ abstract class Database
      *
      * @return bool
      */
-    public function isValid()
+    public function isValid() : bool
     {
         $params = array_filter(
             [
