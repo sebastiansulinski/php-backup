@@ -1,4 +1,6 @@
-<?php namespace SSD\Backup\Contracts;
+<?php
+
+namespace SSD\Backup\Contracts;
 
 
 interface Processor
@@ -8,5 +10,5 @@ interface Processor
      *
      * @return void
      */
-    public function execute();
+    public function execute() : void;
 }

@@ -1,6 +1,8 @@
-<?php namespace SSD\Backup\Contracts;
+<?php
+
+namespace SSD\Backup\Contracts;
+
 
 interface File
 {
-
 }
