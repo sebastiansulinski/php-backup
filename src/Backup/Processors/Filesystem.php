@@ -1,14 +1,16 @@
-<?php namespace SSD\Backup\Processors;
+<?php
+
+namespace SSD\Backup\Processors;
 
 use SSD\Backup\Backup;
-use SSD\Backup\Contracts\Filesystem as FilesystemContract;
+use SSD\Backup\Jobs\Filesystem as FilesystemJob;
 
 abstract class Filesystem
 {
     /**
      * Backup object instance.
      *
-     * @var Backup
+     * @var \SSD\Backup\Backup
      */
     protected $backup;
 
@@ -21,7 +23,8 @@ abstract class Filesystem
 
     /**
      * Constructor.
-     * @param Backup $backup
+     *
+     * @param \SSD\Backup\Backup $backup
      * @param array $jobs
      */
     public function __construct(Backup $backup, array $jobs)
@@ -35,21 +38,19 @@ abstract class Filesystem
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
-        foreach($this->jobs as $job) {
-
+        foreach ($this->jobs as $job) {
             $this->add($job->job, $job->namespace);
-
         }
     }
 
     /**
      * Add to the collection.
      *
-     * @param FilesystemContract $directory
-     * @param string $namespace
+     * @param  \SSD\Backup\Jobs\Filesystem $resource
+     * @param  string $namespace
+     * @return void
      */
-    abstract protected function add(FilesystemContract $directory, $namespace = '');
-
+    abstract protected function add(FilesystemJob $resource, $namespace = ''): void;
 }

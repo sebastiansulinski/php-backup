@@ -1,22 +1,25 @@
-<?php namespace SSD\Backup\Processors;
+<?php
+
+namespace SSD\Backup\Processors;
 
 use SSD\Backup\Contracts\Processor;
-use SSD\Backup\Contracts\Filesystem as FilesystemContract;
+use SSD\Backup\Jobs\Filesystem as FilesystemJob;
 
 class File extends Filesystem implements Processor
 {
     /**
      * Add single file to the collection.
      *
-     * @param FilesystemContract $file
-     * @param string $namespace
+     * @param  \SSD\Backup\Jobs\Filesystem $file
+     * @param  string $namespace
+     * @return void
      */
-    protected function add(FilesystemContract $file, $namespace = '')
+    protected function add(FilesystemJob $file, $namespace = ''): void
     {
         $this->backup->addToCollection(
             [
                 'name' => $file->asset(),
-                'path' => $file->fullPath()
+                'path' => $file->getFullPath()
             ],
             $namespace
         );

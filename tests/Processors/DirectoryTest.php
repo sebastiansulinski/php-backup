@@ -1,40 +1,14 @@
-<?php namespace SSDTest\Processors;
+<?php
 
-use TypeError;
+namespace SSDTest\Processors;
 
 use SSDTest\BaseCase;
 use SSD\Backup\Backup;
 use SSD\Backup\Jobs\Job;
 use SSD\Backup\Jobs\Directory as DirectoryJob;
-use SSD\Backup\Processors\Directory;
 
 class DirectoryTest extends BaseCase
 {
-    /**
-     * @test
-     *
-     * @expectedException TypeError
-     */
-    public function throws_error_without_both_valid_arguments()
-    {
-        $directory = new Directory();
-    }
-
-    /**
-     * @test
-     *
-     * @expectedException TypeError
-     */
-    public function throws_error_without_second_valid_arguments()
-    {
-        $backup = new Backup(
-            $this->dropboxInstance(),
-            $this->working
-        );
-
-        $directory = new Directory($backup);
-    }
-
     /**
      * @test
      */
@@ -42,12 +16,12 @@ class DirectoryTest extends BaseCase
     {
         $backup = new Backup(
             $this->dropboxInstance(),
-            $this->working
+            $this->working()
         );
         $backup->addJob(new Job(
             new DirectoryJob(
-                $this->css_directory(),
-                $this->assets
+                $this->cssDirectory(),
+                $this->assets()
             ),
             'directories'
         ));
@@ -74,14 +48,14 @@ class DirectoryTest extends BaseCase
     {
         $backup = new Backup(
             $this->dropboxInstance(),
-            $this->working
+            $this->working()
         );
         $backup->addJob(new Job(
             new DirectoryJob(
-                $this->css_directory(),
-                $this->assets,
+                $this->cssDirectory(),
+                $this->assets(),
                 [
-                    $this->css_components_directory()
+                    $this->cssComponentsDirectory()
                 ]
             ),
             'directories'
@@ -95,5 +69,4 @@ class DirectoryTest extends BaseCase
             'There is more then 1 item in the "directories" collection'
         );
     }
-
 }

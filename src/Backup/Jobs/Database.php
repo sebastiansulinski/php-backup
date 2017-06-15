@@ -2,7 +2,6 @@
 
 namespace SSD\Backup\Jobs;
 
-
 use SSD\Backup\Contracts\Job as JobContract;
 
 use Carbon\Carbon;
@@ -16,7 +15,7 @@ abstract class Database implements JobContract
      *
      * @var string
      */
-    public $host = 'localhost';
+    public $host = '127.0.0.1';
 
     /**
      * Database name.
@@ -35,7 +34,7 @@ abstract class Database implements JobContract
     /**
      * Database password.
      *
-     * @var mixed
+     * @var string
      */
     public $password;
 
@@ -44,36 +43,45 @@ abstract class Database implements JobContract
      *
      * @var int
      */
-    public $port;
+    public $port = 3306;
 
     /**
      * Export file name.
      *
-     * @var null
+     * @var string
      */
-    public $file_name = null;
+    public $fileName;
 
     /**
      * Database constructor.
      *
-     * @param array $params
+     * @param array $props
      */
-    public function __construct(array $params = [])
+    public function __construct(array $props = [])
     {
-        if (empty($params)) {
+        if (empty($props)) {
             return;
         }
 
+        $this->setProperties($props);
+    }
+
+    /**
+     * Set properties.
+     *
+     * @param array $props
+     */
+    public function setProperties(array $props): void
+    {
         $reflection = new ReflectionClass($this);
 
-        foreach($params as $key => $value) {
+        foreach ($props as $key => $value) {
 
-            if ( ! $reflection->hasProperty($key)) {
+            if (!$reflection->hasProperty($key)) {
                 throw new InvalidArgumentException("Property {$key} is invalid.");
             }
 
             $this->{$key} = $value;
-
         }
     }
 
@@ -82,15 +90,15 @@ abstract class Database implements JobContract
      *
      * @return string
      */
-    abstract public function type() : string;
+    abstract public function type(): string;
 
     /**
      * Set database host.
      *
-     * @param $host
+     * @param  string $host
      * @return self
      */
-    public function setHost($host) : self
+    public function setHost(string $host): self
     {
         $this->host = $host;
 
@@ -100,10 +108,10 @@ abstract class Database implements JobContract
     /**
      * Set database name.
      *
-     * @param $name
+     * @param  string $name
      * @return self
      */
-    public function setName($name) : self
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -113,10 +121,10 @@ abstract class Database implements JobContract
     /**
      * Set database username.
      *
-     * @param $user
+     * @param  string $user
      * @return self
      */
-    public function setUser($user) : self
+    public function setUser(string $user): self
     {
         $this->user = $user;
 
@@ -126,10 +134,10 @@ abstract class Database implements JobContract
     /**
      * Set database password.
      *
-     * @param $password
+     * @param  string $password
      * @return self
      */
-    public function setPassword($password) : self
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -139,10 +147,10 @@ abstract class Database implements JobContract
     /**
      * Set database port.
      *
-     * @param $port
+     * @param  int $port
      * @return self
      */
-    public function setPort($port) : self
+    public function setPort(int $port): self
     {
         $this->port = $port;
 
@@ -152,12 +160,12 @@ abstract class Database implements JobContract
     /**
      * Set export file name.
      *
-     * @param $name
+     * @param  string $name
      * @return self
      */
-    public function setFileName($name) : self
+    public function setFileName(string $name): self
     {
-        $this->file_name = $name;
+        $this->fileName = $name;
 
         return $this;
     }
@@ -167,13 +175,13 @@ abstract class Database implements JobContract
      *
      * @return string
      */
-    public function fileName() : string
+    public function fileName(): string
     {
-        if (is_null($this->file_name)) {
-            $this->file_name = $this->name . '_' . Carbon::now()->format('Y-m-d_H-i-s');
+        if (is_null($this->fileName)) {
+            $this->fileName = $this->name.'_'.Carbon::now()->format('Y-m-d_H-i-s');
         }
 
-        return rtrim($this->file_name, '.sql').'.sql';
+        return rtrim($this->fileName, '.sql').'.sql';
     }
 
     /**
@@ -181,9 +189,19 @@ abstract class Database implements JobContract
      *
      * @return bool
      */
-    public function isValid() : bool
+    public function isValid(): bool
     {
-        $params = array_filter(
+        return count($this->filterProperties()) === 5;
+    }
+
+    /**
+     * Filter non empty properties.
+     *
+     * @return array
+     */
+    private function filterProperties(): array
+    {
+        return array_filter(
             [
                 $this->host,
                 $this->name,
@@ -191,11 +209,9 @@ abstract class Database implements JobContract
                 $this->password,
                 $this->port
             ],
-            function($item) {
-                return ! empty($item);
+            function ($item) {
+                return !empty($item);
             }
         );
-
-        return count($params) === 5;
     }
 }

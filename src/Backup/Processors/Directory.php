@@ -1,25 +1,28 @@
-<?php namespace SSD\Backup\Processors;
+<?php
+
+namespace SSD\Backup\Processors;
 
 use SSD\Backup\Contracts\Processor;
-use SSD\Backup\Contracts\Filesystem as FilesystemContract;
+use SSD\Backup\Jobs\Filesystem as FilesystemJob;
 
 use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem as LeagueFilesystem;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\Filesystem as LeagueFilesystem;
 
 class Directory extends Filesystem implements Processor
 {
     /**
      * Add directory and its content to the collection.
      *
-     * @param FilesystemContract $directory
-     * @param string $namespace
+     * @param  \SSD\Backup\Jobs\Filesystem $directory
+     * @param  string $namespace
+     * @return void
      */
-    protected function add(FilesystemContract $directory, $namespace = '')
+    protected function add(FilesystemJob $directory, $namespace = ''): void
     {
         $filesystem = new LeagueFilesystem(
             new Local(
-                $directory->rootPath(),
+                $directory->getRootPath(),
                 LOCK_EX,
                 Local::SKIP_LINKS
             ),
@@ -31,21 +34,21 @@ class Directory extends Filesystem implements Processor
         $collection = $filesystem->listContents($directory->asset(), true);
 
         $this->addToCollection($directory, $namespace, $collection);
-
     }
 
     /**
      * Add item to collection.
      *
-     * @param FilesystemContract $directory
-     * @param string $namespace
-     * @param array $collection
+     * @param  \SSD\Backup\Jobs\Filesystem $directory
+     * @param  string $namespace
+     * @param  array $collection
+     * @return void
      */
-    private function addToCollection(FilesystemContract $directory, $namespace = '', $collection)
+    private function addToCollection(FilesystemJob $directory, $namespace = '', $collection): void
     {
         foreach ($collection as $item) {
 
-            $fullPath = $directory->rootPath() . DIRECTORY_SEPARATOR . $item['path'];
+            $fullPath = $directory->getRootPath().DIRECTORY_SEPARATOR.$item['path'];
 
             $trimmedPath = ltrim($item['path'], DIRECTORY_SEPARATOR);
             $trimmedFullPath = ltrim($fullPath, DIRECTORY_SEPARATOR);
@@ -61,21 +64,20 @@ class Directory extends Filesystem implements Processor
                 ],
                 $namespace
             );
-
         }
     }
 
     /**
      * Check if a given path is excluded.
      *
-     * @param FilesystemContract $directory
-     * @param $path
-     * @param $fullPath
+     * @param  \SSD\Backup\Jobs\Filesystem $directory
+     * @param  string $path
+     * @param  string $fullPath
      * @return bool
      */
-    private function isExcluded(FilesystemContract $directory, $path, $fullPath)
+    private function isExcluded(FilesystemJob $directory, $path, $fullPath): bool
     {
-        foreach($directory->exclude as $excluded) {
+        foreach ($directory->exclude as $excluded) {
 
             if (
                 strpos($fullPath, $excluded) === 0 ||
@@ -83,10 +85,8 @@ class Directory extends Filesystem implements Processor
             ) {
                 return true;
             }
-
         }
 
         return false;
     }
-
 }

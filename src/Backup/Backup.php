@@ -1,38 +1,38 @@
-<?php namespace SSD\Backup;
+<?php
 
-use ZipArchive;
-use InvalidArgumentException;
-use Carbon\Carbon;
-use League\Flysystem\MountManager;
-
-use SSD\Backup\Contracts\Database;
-use SSD\Backup\Contracts\Directory;
-use SSD\Backup\Contracts\File;
+namespace SSD\Backup;
 
 use SSD\Backup\Jobs\Job;
 use SSD\Backup\Remotes\Remote;
 
-use SSD\Backup\Processors\Database as DatabaseProcessor;
-use SSD\Backup\Processors\File as FileProcessor;
-use SSD\Backup\Processors\Directory as DirectoryProcessor;
-use SSD\Backup\Processors\Archive as ArchiveProcessor;
-use SSD\Backup\Processors\Distributor as DistributorProcessor;
-use SSD\Backup\Processors\Cleanup as CleanupProcessor;
+use SSD\Backup\Jobs\Database;
+use SSD\Backup\Contracts\File;
+use SSD\Backup\Contracts\Directory;
 
+use SSD\Backup\Processors\File as FileProcessor;
+use SSD\Backup\Processors\Archive as ArchiveProcessor;
+use SSD\Backup\Processors\Cleanup as CleanupProcessor;
+use SSD\Backup\Processors\Database as DatabaseProcessor;
+use SSD\Backup\Processors\Directory as DirectoryProcessor;
+use SSD\Backup\Processors\Distributor as DistributorProcessor;
+
+use ZipArchive;
+use Carbon\Carbon;
+use InvalidArgumentException;
 
 class Backup
 {
     /**
      * Remote object instance.
      *
-     * @var Remote
+     * @var \SSD\Backup\Remotes\Remote
      */
     public $remote;
 
     /**
      * MountManager object instance.
      *
-     * @var MountManager
+     * @var \League\Flysystem\MountManager
      */
     public $manager;
 
@@ -46,23 +46,23 @@ class Backup
     /**
      * Remote directory to which backup will be saved.
      *
-     * @var null|string
+     * @var string
      */
-    private $remoteBackupDir = null;
+    private $remoteBackupDir;
 
     /**
      * Name of the archive file.
      *
      * @var string
      */
-    private $archiveName = null;
+    private $archiveName;
 
     /**
      * Collection of jobs to be processed.
      *
      * @var array
      */
-    private $jobs;
+    private $jobs = [];
 
     /**
      * Collection of database jobs.
@@ -100,6 +100,9 @@ class Backup
     private $removal = [];
 
     /**
+     * Number of backups before overwritten
+     * 0 does not overwrite any backups.
+     *
      * @var int
      */
     private $noOfBackups = 0;
@@ -108,15 +111,14 @@ class Backup
     /**
      * Backup constructor.
      *
-     * @param Remote $remote
-     * @param null|string $localWorkingDir
+     * @param \SSD\Backup\Remotes\Remote $remote
+     * @param string $localWorkingDir
      */
     public function __construct(
         Remote $remote,
-        $localWorkingDir = null
-    )
-    {
-        if (is_null($localWorkingDir) || ! is_dir($localWorkingDir)) {
+        string $localWorkingDir
+    ) {
+        if (!is_dir($localWorkingDir)) {
             throw new InvalidArgumentException('Invalid local working directory.');
         }
 
@@ -127,9 +129,9 @@ class Backup
     /**
      * Get path to the local working directory.
      *
-     * @return null|string
+     * @return string
      */
-    public function getLocalWorkingDirectory()
+    public function getLocalWorkingDirectory(): string
     {
         return $this->localWorkingDir;
     }
@@ -137,11 +139,10 @@ class Backup
     /**
      * Set remote directory.
      *
-     * @param $directory
-     *
-     * @return $this
+     * @param  string $directory
+     * @return self
      */
-    public function setRemoteDirectory($directory)
+    public function setRemoteDirectory(string $directory): self
     {
         $this->remoteBackupDir = $directory;
 
@@ -151,9 +152,9 @@ class Backup
     /**
      * Get remote directory name.
      *
-     * @return null|string
+     * @return string
      */
-    public function getRemoteDirectory()
+    public function getRemoteDirectory(): string
     {
         return $this->remoteBackupDir;
     }
@@ -161,10 +162,10 @@ class Backup
     /**
      * Set archive name.
      *
-     * @param $name
-     * @return $this
+     * @param  string $name
+     * @return self
      */
-    public function setArchiveName($name)
+    public function setArchiveName(string $name): self
     {
         $this->archiveName = $name;
 
@@ -176,7 +177,7 @@ class Backup
      *
      * @return string
      */
-    public function getArchiveName()
+    public function getArchiveName(): string
     {
         if (is_null($this->archiveName)) {
             $this->archiveName = Carbon::now()->format('Y-m-d_H-i-s');
@@ -190,18 +191,18 @@ class Backup
      *
      * @return string
      */
-    public function archivePath()
+    public function archivePath(): string
     {
-        return $this->getLocalWorkingDirectory() . DIRECTORY_SEPARATOR . $this->getArchiveName();
+        return $this->getLocalWorkingDirectory().DIRECTORY_SEPARATOR.$this->getArchiveName();
     }
 
     /**
      * Add new job.
      *
-     * @param Job $job
-     * @return $this
+     * @param  \SSD\Backup\Jobs\Job $job
+     * @return self
      */
-    public function addJob(Job $job)
+    public function addJob(Job $job): self
     {
         $this->jobs[] = $job;
 
@@ -213,24 +214,20 @@ class Backup
      *
      * @return array
      */
-    public function getJobs()
+    public function getJobs(): array
     {
         return $this->jobs;
     }
 
     /**
-     * Overwrite default number of backups
-     * to be stored on the remote server
-     * before being overwritten
+     * Set number of backups
+     * before overwriting.
      *
-     * @param int $number
+     * @param  int $number
+     * @return void
      */
-    public function setNumberOfBackups($number = 7)
+    public function setNumberOfBackups(int $number): void
     {
-        if ( ! is_int($number)) {
-            throw new InvalidArgumentException('Number of backups has to be represented by integer.');
-        }
-
         $this->noOfBackups = $number;
     }
 
@@ -239,7 +236,7 @@ class Backup
      *
      * @return int
      */
-    public function getNumberOfBackups()
+    public function getNumberOfBackups(): int
     {
         return $this->noOfBackups;
     }
@@ -247,9 +244,9 @@ class Backup
     /**
      * Execute backup.
      *
-     * @return bool
+     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $this->prepare();
 
@@ -273,16 +270,20 @@ class Backup
     /**
      * Validate properties and segregate jobs.
      *
+     * @throws InvalidArgumentException
      * @return void
      */
-    public function prepare()
+    public function prepare(): void
     {
-        if (empty($this->localWorkingDir) || ! is_dir($this->localWorkingDir)) {
+        if (
+            is_null($this->localWorkingDir) ||
+            !is_dir($this->localWorkingDir)
+        ) {
             throw new InvalidArgumentException('Invalid local working directory.');
         }
 
         if (empty($this->jobs)) {
-            throw new InvalidArgumentException('There are no jobs available.');
+            throw new InvalidArgumentException('There are no jobs to process.');
         }
 
         $this->segregateJobs();
@@ -293,21 +294,21 @@ class Backup
      *
      * @return void
      */
-    private function segregateJobs()
+    private function segregateJobs(): void
     {
-        foreach($this->jobs as $job) {
-
+        foreach ($this->jobs as $job) {
             $this->assignJob($job);
-
         }
     }
 
     /**
      * Assign job to the right collection.
      *
-     * @param Job $job
+     * @throws InvalidArgumentException
+     * @param  Job $job
+     * @return void
      */
-    private function assignJob(Job $job)
+    private function assignJob(Job $job): void
     {
         if ($job->job instanceof Database) {
 
@@ -331,10 +332,11 @@ class Backup
     /**
      * Add item to the collection.
      *
-     * @param array $item
-     * @param string $namespace
+     * @param  array $item
+     * @param  string $namespace
+     * @return void
      */
-    public function addToCollection(array $item, $namespace = '')
+    public function addToCollection(array $item, string $namespace): void
     {
         $this->collection[$namespace][] = $item;
     }
@@ -344,7 +346,7 @@ class Backup
      *
      * @return array
      */
-    public function getCollection()
+    public function getCollection(): array
     {
         return $this->collection;
     }
@@ -352,9 +354,10 @@ class Backup
     /**
      * Add file to the removal at clean up.
      *
-     * @param $path
+     * @param  string $path
+     * @return void
      */
-    public function addToRemoval($path)
+    public function addToRemoval(string $path): void
     {
         $this->removal[] = $path;
     }
@@ -364,7 +367,7 @@ class Backup
      *
      * @return array
      */
-    public function getRemoval()
+    public function getRemoval(): array
     {
         return $this->removal;
     }
@@ -374,7 +377,7 @@ class Backup
      *
      * @return void
      */
-    public function resetCollection()
+    public function resetCollection(): void
     {
         $this->collection = [];
     }
@@ -384,7 +387,7 @@ class Backup
      *
      * @return void
      */
-    public function processDatabases()
+    public function processDatabases(): void
     {
         if (empty($this->databases)) {
             return;
@@ -404,7 +407,7 @@ class Backup
      *
      * @return void
      */
-    public function processFiles()
+    public function processFiles(): void
     {
         if (empty($this->files)) {
             return;
@@ -423,7 +426,7 @@ class Backup
      *
      * @return void
      */
-    public function processDirectories()
+    public function processDirectories(): void
     {
         if (empty($this->directories)) {
             return;
@@ -442,7 +445,7 @@ class Backup
      *
      * @return void
      */
-    private function archive()
+    private function archive(): void
     {
         $archive = new ArchiveProcessor(
             $this,
@@ -457,7 +460,7 @@ class Backup
      *
      * @return void
      */
-    private function send()
+    private function send(): void
     {
         $distributor = new DistributorProcessor($this);
 
@@ -469,7 +472,7 @@ class Backup
      *
      * @return void
      */
-    private function cleanup()
+    private function cleanup(): void
     {
         $cleanup = new CleanupProcessor($this);
 

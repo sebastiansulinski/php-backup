@@ -27,29 +27,29 @@ use SSD\Backup\Jobs\Directory;
 use SSD\Backup\Jobs\File;
 use SSD\Backup\Jobs\MySQLDatabase;
 
-$dotenv = new DotEnv([
-    __DIR__ . '/.env'
-]);
-$dotenv->load();
-$dotenv->required([
-    'DROPBOX_SECRET',
-    'DROPBOX_OAUTH',
-    'REMOTE_DIR_NAME',
-    'DB_HOST',
-    'DB_PORT',
-    'DB_NAME',
-    'DB_USER',
-    'DB_PASS'
-]);
-
-// working directory
-$workingDirectory = __DIR__ . '/tmp';
+use Illuminate\Filesystem\Filesystem;
 
 try {
 
+    $dotenv = new DotEnv([
+        __DIR__ . '/.env'
+    ]);
+    $dotenv->load();
+    $dotenv->required([
+        'DROPBOX_OAUTH',
+        'REMOTE_DIR_NAME',
+        'DB_HOST',
+        'DB_PORT',
+        'DB_NAME',
+        'DB_USER',
+        'DB_PASS'
+    ]);
+    
+    // working directory
+    $workingDirectory = __DIR__ . '/tmp';
+
     $remote = new Dropbox(
-        getenv('DROPBOX_OAUTH'),
-        getenv('DROPBOX_SECRET')
+        getenv('DROPBOX_OAUTH')
     );
 
     $backup = new Backup(
@@ -101,9 +101,14 @@ try {
 
 } catch (Exception $e) {
 
-    $file = $workingDirectory . DIRECTORY_SEPARATOR . 'error_log';
+    $filesystem = new Filesystem;
+    
+    $filesystem->cleanDirectory($workingDirectory);
 
-    file_put_contents($file, $e->getMessage() . PHP_EOL, FILE_APPEND | LOCK_EX);
+    $filesystem->prepend(
+        $workingDirectory . DIRECTORY_SEPARATOR . 'error_log',
+        $e->getMessage() . PHP_EOL
+    );
 
 }
 ```
@@ -117,30 +122,33 @@ use SSD\DotEnv\DotEnv;
 
 use SSD\Backup\Backup;
 use SSD\Backup\Remotes\Ftp;
-use SSD\Backup\Jobs\Directory;
+
 use SSD\Backup\Jobs\File;
+use SSD\Backup\Jobs\Directory;
 use SSD\Backup\Jobs\MySQLDatabase;
 
-$dotenv = new DotEnv([
-    __DIR__ . '/.env'
-]);
-$dotenv->load();
-$dotenv->required([
-    'FTP_HOST',
-    'FTP_USER',
-    'FTP_PASS',
-    'REMOTE_DIR_NAME',
-    'DB_HOST',
-    'DB_PORT',
-    'DB_NAME',
-    'DB_USER',
-    'DB_PASS'
-]);
-
-// working directory
-$workingDirectory = __DIR__ . '/tmp';
+use Illuminate\Filesystem\Filesystem;
 
 try {
+
+    $dotenv = new DotEnv([
+        __DIR__ . '/.env'
+    ]);
+    $dotenv->load();
+    $dotenv->required([
+        'FTP_HOST',
+        'FTP_USER',
+        'FTP_PASS',
+        'REMOTE_DIR_NAME',
+        'DB_HOST',
+        'DB_PORT',
+        'DB_NAME',
+        'DB_USER',
+        'DB_PASS'
+    ]);
+    
+    // working directory
+    $workingDirectory = __DIR__ . '/tmp';
 
     $remote = new Ftp(
         getenv('FTP_HOST'),
@@ -193,9 +201,14 @@ try {
 
 } catch (Exception $e) {
 
-    $file = $workingDirectory . DIRECTORY_SEPARATOR . 'error_log';
+    $filesystem = new Filesystem;
+    
+    $filesystem->cleanDirectory($workingDirectory);
 
-    file_put_contents($file, $e->getMessage() . PHP_EOL, FILE_APPEND | LOCK_EX);
+    $filesystem->prepend(
+        $workingDirectory . DIRECTORY_SEPARATOR . 'error_log',
+        $e->getMessage() . PHP_EOL
+    );
 
 }
 ```

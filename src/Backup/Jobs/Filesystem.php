@@ -2,8 +2,9 @@
 
 namespace SSD\Backup\Jobs;
 
-
 use SSD\Backup\Contracts\Job as JobContract;
+
+use InvalidArgumentException;
 
 abstract class Filesystem implements JobContract
 {
@@ -12,23 +13,38 @@ abstract class Filesystem implements JobContract
      *
      * @var string
      */
-    protected $fullPath = '';
+    protected $fullPath;
 
     /**
      * Absolute path to the root directory.
      *
      * @var string
      */
-    protected $rootPath = '';
+    protected $rootPath;
+
+    /**
+     * Filesystem constructor.
+     *
+     * @param string $fullPath
+     * @param string|null $rootPath
+     */
+    public function __construct(string $fullPath, string $rootPath = null)
+    {
+        $this->setFullPath($fullPath);
+
+        if (!is_null($rootPath)) {
+            $this->setRootPath($rootPath);
+        }
+    }
 
     /**
      * Extract and return asset path starting from root directory.
      *
      * @return string
      */
-    public function asset() : string
+    public function asset(): string
     {
-        if ($this->rootPath === '') {
+        if (is_null($this->rootPath)) {
 
             $partials = explode('/', $this->fullPath);
 
@@ -40,13 +56,34 @@ abstract class Filesystem implements JobContract
     }
 
     /**
+     * Set full path.
+     *
+     * @param string $fullPath
+     */
+    abstract public function setFullPath(string $fullPath): void;
+
+    /**
      * Get full path.
      *
      * @return string
      */
-    public function fullPath() : string
+    public function getFullPath(): string
     {
         return $this->fullPath;
+    }
+
+    /**
+     * Set root path.
+     *
+     * @param string $rootPath
+     */
+    public function setRootPath(string $rootPath): void
+    {
+        if (!is_dir($rootPath)) {
+            throw new InvalidArgumentException("{$rootPath} is not a valid directory.");
+        }
+
+        $this->rootPath = $rootPath;
     }
 
     /**
@@ -54,8 +91,8 @@ abstract class Filesystem implements JobContract
      *
      * @return string
      */
-    public function rootPath() : string
+    public function getRootPath(): string
     {
-        return $this->rootPath;
+        return $this->rootPath ?? '';
     }
 }

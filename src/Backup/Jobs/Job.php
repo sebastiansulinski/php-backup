@@ -2,7 +2,6 @@
 
 namespace SSD\Backup\Jobs;
 
-
 use SSD\Backup\Contracts\Job as JobContract;
 
 class Job
@@ -19,7 +18,7 @@ class Job
      *
      * @var string
      */
-    public $namespace = '';
+    public $namespace;
 
     /**
      * Job constructor.
@@ -27,7 +26,7 @@ class Job
      * @param \SSD\Backup\Contracts\Job $job
      * @param string $namespace
      */
-    public function __construct(JobContract $job, string $namespace)
+    public function __construct(JobContract $job, string $namespace = '')
     {
         $this->job = $job;
         $this->namespace = $namespace;

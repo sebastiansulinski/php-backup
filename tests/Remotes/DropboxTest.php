@@ -1,34 +1,14 @@
-<?php namespace SSDTest\Remotes;
+<?php
 
-use PHPUnit_Framework_Error;
+namespace SSDTest\Remotes;
 
-use SSD\Backup\Remotes\Dropbox;
+
 use SSDTest\BaseCase;
 
 use League\Flysystem\FilesystemInterface;
 
 class DropboxTest extends BaseCase
 {
-    /**
-     * @test
-     *
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function constructor_throws_error_without_arguments()
-    {
-        $dropbox = new Dropbox();
-    }
-
-    /**
-     * @test
-     *
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function constructor_throws_error_with_only_one_argument()
-    {
-        $dropbox = new Dropbox('foo');
-    }
-
     /**
      * @test
      */

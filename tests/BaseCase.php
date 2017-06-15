@@ -1,31 +1,19 @@
-<?php namespace SSDTest;
+<?php
 
-use PHPUnit_Framework_TestCase;
+namespace SSDTest;
 
-use SSD\Backup\Remotes\Dropbox;
+
 use SSD\Backup\Remotes\Ftp;
+use SSD\Backup\Remotes\Dropbox;
 
-abstract class BaseCase extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+abstract class BaseCase extends TestCase
 {
-
-    /**
-     * Path to the assets directory.
-     *
-     * @var string
-     */
-    protected $assets = __DIR__ . DIRECTORY_SEPARATOR . 'assets';
-
-    /**
-     * Path to the working directory.
-     *
-     * @var string
-     */
-    protected $working = __DIR__ . DIRECTORY_SEPARATOR . 'working';
-
     /**
      * Invalid path.
      *
-     * @var string
+     * @var int
      */
     protected $invalid = 0;
 
@@ -34,17 +22,37 @@ abstract class BaseCase extends PHPUnit_Framework_TestCase
      *
      * @var array
      */
-    protected $remove_files = [];
+    protected $removeFiles = [];
 
+
+    /**
+     * Get assets path.
+     *
+     * @return string
+     */
+    protected function assets(): string
+    {
+        return __DIR__.DIRECTORY_SEPARATOR.'assets';
+    }
+
+    /**
+     * Get working path.
+     *
+     * @return string
+     */
+    protected function working(): string
+    {
+        return __DIR__.DIRECTORY_SEPARATOR.'working';
+    }
 
     /**
      * Absolute path to the 'terms.txt' file.
      *
      * @return string
      */
-    protected function terms_file()
+    protected function termsFile(): string
     {
-        return $this->assets . DIRECTORY_SEPARATOR . 'terms.txt';
+        return $this->assets().DIRECTORY_SEPARATOR.'terms.txt';
     }
 
     /**
@@ -52,9 +60,9 @@ abstract class BaseCase extends PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    protected function css_directory()
+    protected function cssDirectory(): string
     {
-        return $this->assets . DIRECTORY_SEPARATOR . 'css';
+        return $this->assets().DIRECTORY_SEPARATOR.'css';
     }
 
     /**
@@ -62,9 +70,9 @@ abstract class BaseCase extends PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    protected function css_file()
+    protected function cssFile(): string
     {
-        return $this->css_directory() . DIRECTORY_SEPARATOR . 'app.css';
+        return $this->cssDirectory().DIRECTORY_SEPARATOR.'app.css';
     }
 
     /**
@@ -72,9 +80,9 @@ abstract class BaseCase extends PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    protected function css_components_directory()
+    protected function cssComponentsDirectory(): string
     {
-        return $this->css_directory() . DIRECTORY_SEPARATOR . 'components';
+        return $this->cssDirectory().DIRECTORY_SEPARATOR.'components';
     }
 
     /**
@@ -82,31 +90,31 @@ abstract class BaseCase extends PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    protected function css_components_file()
+    protected function cssComponentsFile(): string
     {
-        return $this->css_components_directory() . DIRECTORY_SEPARATOR . 'text.css';
+        return $this->cssComponentsDirectory().DIRECTORY_SEPARATOR.'text.css';
     }
 
     /**
      * Archive path with file name.
      *
-     * @param $name
+     * @param  string $name
      * @return string
      */
-    protected function archive_path($name)
+    protected function archivePath(string $name): string
     {
-        return $this->working . DIRECTORY_SEPARATOR . $name;
+        return $this->working().DIRECTORY_SEPARATOR.$name;
     }
 
     /**
      * Add file to the removal array.
      *
-     * @param $file
+     * @param  string $file
      * @return void
      */
-    protected function add_file_to_remove($file)
+    protected function addFileToRemove(string $file): void
     {
-        $this->remove_files[] = $file;
+        $this->removeFiles[] = $file;
     }
 
     /**
@@ -114,41 +122,37 @@ abstract class BaseCase extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
-        if (empty($this->remove_files)) {
+        if (empty($this->removeFiles)) {
             return;
         }
 
-        foreach($this->remove_files as $file) {
-
-            if ( ! is_file($file)) {
-                throw new \InvalidArgumentException("{$file} is not a file.");
+        foreach ($this->removeFiles as $file) {
+            if (!is_file($file)) {
+                continue;
             }
-
             unlink($file);
-
         }
     }
 
     /**
      * Get Dropbox object instance.
      *
-     * @return Dropbox
+     * @return \SSD\Backup\Remotes\Dropbox
      */
-    protected function dropboxInstance()
+    protected function dropboxInstance(): Dropbox
     {
-        return new Dropbox('abc', 'def');
+        return new Dropbox('abc');
     }
 
     /**
      * Get Ftp object instance.
      *
-     * @return Ftp
+     * @return \SSD\Backup\Remotes\Ftp
      */
-    protected function ftpInstance()
+    protected function ftpInstance(): Ftp
     {
         return new Ftp('abc', 'def', 'abc');
     }
-
 }

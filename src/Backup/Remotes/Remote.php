@@ -1,13 +1,13 @@
-<?php namespace SSD\Backup\Remotes;
+<?php
 
-use League\Flysystem\FilesystemInterface;
+namespace SSD\Backup\Remotes;
 
 abstract class Remote
 {
     /**
      * Filesystem object.
      *
-     * @var FilesystemInterface
+     * @var \League\Flysystem\FilesystemInterface
      */
     public $remote;
 }

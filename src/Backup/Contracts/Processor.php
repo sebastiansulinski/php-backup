@@ -2,7 +2,6 @@
 
 namespace SSD\Backup\Contracts;
 
-
 interface Processor
 {
     /**
@@ -10,5 +9,5 @@ interface Processor
      *
      * @return void
      */
-    public function execute() : void;
+    public function execute(): void;
 }

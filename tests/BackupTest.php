@@ -1,46 +1,23 @@
-<?php namespace SSDTest;
+<?php
 
-use InvalidArgumentException;
+namespace SSDTest;
 
 use SSD\Backup\Backup;
 use SSD\Backup\Jobs\Job;
+use SSD\Backup\Jobs\File;
+use SSD\Backup\Jobs\Directory;
 use SSD\Backup\Remotes\Dropbox;
 use SSD\Backup\Jobs\MySQLDatabase;
 use SSD\Backup\Jobs\PostgreSQLDatabase;
-use SSD\Backup\Jobs\File;
-use SSD\Backup\Jobs\Directory;
 
 class BackupTest extends BaseCase
 {
     /**
      * @test
-     *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid local working directory.
-     */
-    public function throws_exception_without_valid_local_working_directory_argument()
-    {
-        $backup = new Backup($this->dropboxInstance());
-    }
-
-    /**
-     * @test
-     *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage There are no jobs available.
-     */
-    public function throws_exception_with_empty_jobs_property()
-    {
-        $backup = new Backup($this->dropboxInstance(), $this->working);
-        $backup->run();
-    }
-
-    /**
-     * @test
      */
     public function returns_remote_instance()
     {
-        $backup = new Backup($this->dropboxInstance(), $this->working);
+        $backup = new Backup($this->dropboxInstance(), $this->working());
 
         $this->assertInstanceOf(Dropbox::class, $backup->remote);
 
@@ -51,9 +28,9 @@ class BackupTest extends BaseCase
      */
     public function returns_correct_local_directory()
     {
-        $backup = new Backup($this->dropboxInstance(), $this->working);
+        $backup = new Backup($this->dropboxInstance(), $this->working());
 
-        $this->assertEquals($this->working, $backup->getLocalWorkingDirectory());
+        $this->assertEquals($this->working(), $backup->getLocalWorkingDirectory());
 
     }
 
@@ -62,7 +39,7 @@ class BackupTest extends BaseCase
      */
     public function sets_and_returns_correct_remote_directory()
     {
-        $backup = new Backup($this->dropboxInstance(), $this->working);
+        $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->setRemoteDirectory('test');
 
         $this->assertEquals('test', $backup->getRemoteDirectory());
@@ -74,7 +51,7 @@ class BackupTest extends BaseCase
      */
     public function sets_and_returns_correct_archive_name()
     {
-        $backup = new Backup($this->dropboxInstance(), $this->working);
+        $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->setArchiveName('test_archive');
 
         $this->assertEquals('test_archive.zip', $backup->getArchiveName());
@@ -86,10 +63,10 @@ class BackupTest extends BaseCase
      */
     public function returns_correct_archive_path()
     {
-        $backup = new Backup($this->dropboxInstance(), $this->working);
+        $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->setArchiveName('test_archive');
 
-        $this->assertEquals($this->archive_path('test_archive.zip'), $backup->archivePath());
+        $this->assertEquals($this->archivePath('test_archive.zip'), $backup->archivePath());
 
     }
 
@@ -98,7 +75,7 @@ class BackupTest extends BaseCase
      */
     public function adds_jobs()
     {
-        $backup = new Backup($this->dropboxInstance(), $this->working);
+        $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->addJob(new Job(
             new MySQLDatabase([
                 'host' => 'foo',
@@ -119,14 +96,14 @@ class BackupTest extends BaseCase
         ));
         $backup->addJob(new Job(
             new File(
-                $this->css_file(),
-                $this->css_directory()
+                $this->cssFile(),
+                $this->cssDirectory()
             )
         ));
         $backup->addJob(new Job(
             new Directory(
-                $this->css_components_directory(),
-                $this->css_directory()
+                $this->cssComponentsDirectory(),
+                $this->cssDirectory()
             )
         ));
 
@@ -179,6 +156,5 @@ class BackupTest extends BaseCase
         );
 
     }
-
 
 }

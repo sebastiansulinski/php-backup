@@ -1,8 +1,8 @@
-<?php namespace SSD\Backup\Jobs;
+<?php
 
-use SSD\Backup\Contracts\Database as DatabaseContract;
+namespace SSD\Backup\Jobs;
 
-class MySQLDatabase extends Database implements DatabaseContract
+class MySQLDatabase extends Database
 {
     /**
      * Database port.
@@ -16,7 +16,7 @@ class MySQLDatabase extends Database implements DatabaseContract
      *
      * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'mysql';
     }

@@ -1,13 +1,17 @@
-<?php namespace SSD\Backup\Jobs;
+<?php
+
+namespace SSD\Backup\Jobs;
+
+use SSD\Backup\Contracts\Directory as DirectoryContract;
 
 use InvalidArgumentException;
 
-use SSD\Backup\Contracts\Directory as DirectoryContract;
-use SSD\Backup\Contracts\Filesystem as FilesystemContract;
-
-class Directory extends Filesystem implements DirectoryContract, FilesystemContract
+class Directory extends Filesystem implements DirectoryContract
 {
     /**
+     * Collection of directories
+     * excluded from backup.
+     *
      * @var array
      */
     public $exclude = [];
@@ -16,53 +20,51 @@ class Directory extends Filesystem implements DirectoryContract, FilesystemContr
      * Directory constructor.
      *
      * @param string $fullPath
-     * @param null|string $rootPath
+     * @param string|null $rootPath
      * @param array $exclude
      */
-    public function __construct($fullPath, $rootPath = null, array $exclude = [])
+    public function __construct(string $fullPath, string $rootPath = null, array $exclude = [])
     {
-        if ( ! is_dir($fullPath)) {
+        parent::__construct($fullPath, $rootPath);
+
+        if (!empty($exclude)) {
+            $this->setExclude($exclude);
+        }
+    }
+
+    /**
+     * Set full path.
+     *
+     * @param string $fullPath
+     */
+    public function setFullPath(string $fullPath): void
+    {
+        if (!is_dir($fullPath)) {
             throw new InvalidArgumentException("{$fullPath} is not a valid directory.");
         }
 
         $this->fullPath = $fullPath;
-
-        $this->processExclude($exclude);
-
-        if (is_null($rootPath)) {
-            return;
-        }
-
-        if ( ! is_dir($rootPath)) {
-            throw new InvalidArgumentException("{$rootPath} is not a valid directory.");
-        }
-
-        $this->rootPath = $rootPath;
     }
 
     /**
-     * Remove directory separator from the beginning of each path.
+     * Set directories to be excluded.
      *
-     * @param array $exclude
+     * @param  array $exclude
+     * @return void
      */
-    private function processExclude(array $exclude = [])
+    private function setExclude(array $exclude): void
     {
-        if (empty($exclude)) {
-            return;
-        }
-
-        $this->exclude = array_map([$this, 'trim'], $exclude);
+        $this->exclude = array_map([$this, 'trimExcludePaths'], $exclude);
     }
 
     /**
      * Trim the directory separator.
      *
-     * @param $item
+     * @param  string $item
      * @return string
      */
-    private function trim($item)
+    private function trimExcludePaths(string $item): string
     {
         return ltrim($item, DIRECTORY_SEPARATOR);
     }
-
 }

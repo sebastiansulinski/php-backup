@@ -1,20 +1,22 @@
-<?php namespace SSD\Backup\Remotes;
+<?php
 
-use Dropbox\Client;
-use League\Flysystem\Dropbox\DropboxAdapter;
+namespace SSD\Backup\Remotes;
+
 use League\Flysystem\Filesystem;
+
+use Spatie\Dropbox\Client;
+use Spatie\FlysystemDropbox\DropboxAdapter;
 
 class Dropbox extends Remote
 {
     /**
      * Dropbox constructor.
      *
-     * @param $oauth
-     * @param $secret
+     * @param string $authorizationToken
      */
-    public function __construct($oauth, $secret)
+    public function __construct(string $authorizationToken)
     {
-        $client = new Client($oauth, $secret);
+        $client = new Client($authorizationToken);
         $this->remote = new Filesystem(new DropboxAdapter($client));
     }
 }

@@ -1,44 +1,14 @@
-<?php namespace SSDTest\Remotes;
+<?php
 
-use PHPUnit_Framework_Error;
+namespace SSDTest\Remotes;
 
-use SSD\Backup\Remotes\Ftp;
+
 use SSDTest\BaseCase;
 
 use League\Flysystem\FilesystemInterface;
 
 class FtpTest extends BaseCase
 {
-    /**
-     * @test
-     *
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function constructor_throws_error_without_arguments()
-    {
-        $ftp = new Ftp();
-    }
-
-    /**
-     * @test
-     *
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function constructor_throws_error_with_only_one_argument()
-    {
-        $ftp = new Ftp('foo');
-    }
-
-    /**
-     * @test
-     *
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function constructor_throws_error_with_only_two_arguments()
-    {
-        $ftp = new Ftp('foo', 'bar');
-    }
-
     /**
      * @test
      */

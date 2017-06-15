@@ -1,31 +1,33 @@
-<?php namespace SSD\Backup\Processors;
+<?php
 
-use ZipArchive;
+namespace SSD\Backup\Processors;
 
 use SSD\Backup\Backup;
 use SSD\Backup\Contracts\Processor;
+
+use ZipArchive;
 
 class Archive implements Processor
 {
     /**
      * Backup object instance.
      *
-     * @var Backup
+     * @var \SSD\Backup\Backup
      */
     private $backup;
 
     /**
      * ZipArchive object instance.
      *
-     * @var ZipArchive
+     * @var \ZipArchive
      */
     private $archive;
 
     /**
      * Archive constructor.
      *
-     * @param Backup $backup
-     * @param ZipArchive $archive
+     * @param \SSD\Backup\Backup $backup
+     * @param \ZipArchive $archive
      */
     public function __construct(Backup $backup, ZipArchive $archive)
     {
@@ -38,7 +40,7 @@ class Archive implements Processor
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         if (
             $this->archive->open(
@@ -61,39 +63,48 @@ class Archive implements Processor
      *
      * @return void
      */
-    private function processCollection()
+    private function processCollection(): void
     {
-        foreach($this->backup->getCollection() as $namespace => $items) {
-
-            foreach($items as $item) {
-
-                if (is_dir($item['path'])) {
-
-                    $this->archive->addEmptyDir($this->namespacedName($namespace, $item));
-
-                } else {
-
-                    $this->archive->addFile(
-                        $item['path'],
-                        $this->namespacedName($namespace, $item)
-                    );
-
-                }
-
-            }
-
+        foreach ($this->backup->getCollection() as $namespace => $items) {
+            $this->processItemGroup($items, $namespace);
         }
     }
 
     /**
-     * Prepend namespace to the path where available.
+     * Process item group.
      *
-     * @param string $namespace
-     * @param $item
+     * @param  array $items
+     * @param  string $namespace
+     * @return void
+     */
+    private function processItemGroup(array $items, string $namespace): void
+    {
+        foreach ($items as $item) {
+
+            if (is_dir($item['path'])) {
+
+                $this->archive->addEmptyDir($this->namespacedName($item, $namespace));
+
+            } else {
+
+                $this->archive->addFile(
+                    $item['path'],
+                    $this->namespacedName($item, $namespace)
+                );
+
+            }
+        }
+    }
+
+    /**
+     * Prepend namespace to the path.
+     *
+     * @param  string $namespace
+     * @param  array $item
      * @return string
      */
-    private function namespacedName($namespace = '', $item)
+    private function namespacedName(array $item, string $namespace): string
     {
-        return ( ! empty($namespace) ) ? $namespace . '/' . $item['name'] : $item['name'];
+        return $namespace.'/'.$item['name'];
     }
 }

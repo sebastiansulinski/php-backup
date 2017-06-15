@@ -1,10 +1,10 @@
-<?php namespace SSDTest\Processors;
+<?php
 
-use TypeError;
+namespace SSDTest\Processors;
+
 use ZipArchive;
 
 use SSDTest\BaseCase;
-
 use SSD\Backup\Backup;
 use SSD\Backup\Jobs\Job;
 use SSD\Backup\Jobs\File;
@@ -15,27 +15,17 @@ class CleanupTest extends BaseCase
 {
     /**
      * @test
-     *
-     * @expectedException TypeError
-     */
-    public function throws_error_without_valid_argument()
-    {
-        $cleanup = new Cleanup();
-    }
-
-    /**
-     * @test
      */
     public function cleans_collection()
     {
         $backup = new Backup(
             $this->dropboxInstance(),
-            $this->working
+            $this->working()
         );
         $backup->addJob(new Job(
             new File(
-                $this->terms_file(),
-                $this->assets
+                $this->termsFile(),
+                $this->assets()
             )
         ));
         $backup->prepare();

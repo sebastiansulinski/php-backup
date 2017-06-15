@@ -1,23 +1,24 @@
-<?php namespace SSD\Backup\Processors;
+<?php
 
-use BackupManager\Filesystems\Destination;
+namespace SSD\Backup\Processors;
 
 use SSD\Backup\Backup;
 use SSD\Backup\Contracts\Processor;
-use SSD\Backup\Contracts\Database as DatabaseContract;
+use SSD\Backup\Jobs\Database as BaseDatabase;
 
-use BackupManager\Config\Config;
-use BackupManager\Filesystems;
-use BackupManager\Databases;
-use BackupManager\Compressors;
 use BackupManager\Manager;
+use BackupManager\Databases;
+use BackupManager\Filesystems;
+use BackupManager\Compressors;
+use BackupManager\Config\Config;
+use BackupManager\Filesystems\Destination;
 
 class Database implements Processor
 {
     /**
      * Instance of the Backup object.
      *
-     * @var Backup
+     * @var \SSD\Backup\Backup
      */
     private $backup;
 
@@ -39,11 +40,11 @@ class Database implements Processor
     /**
      * Database constructor.
      *
-     * @param Backup $backup
+     * @param \SSD\Backup\Backup $backup
      * @param array $jobs
      * @param string $workingDir
      */
-    public function __construct(Backup $backup, array $jobs, $workingDir)
+    public function __construct(Backup $backup, array $jobs, string $workingDir)
     {
         $this->backup = $backup;
         $this->jobs = $jobs;
@@ -55,24 +56,23 @@ class Database implements Processor
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
-        foreach($this->jobs as $job) {
-
+        foreach ($this->jobs as $job) {
             $this->instance($job->job, $job->namespace);
-
         }
     }
 
     /**
      * Process single backup job.
      *
-     * @param DatabaseContract $database
-     * @param string $namespace
+     * @param  \SSD\Backup\Jobs\Database $database
+     * @param  string $namespace
+     * @return void
      */
-    private function instance(DatabaseContract $database, $namespace = '')
+    private function instance(BaseDatabase $database, string $namespace): void
     {
-        $file = $this->workingDir . '/' . $database->fileName();
+        $file = $this->workingDir.'/'.$database->fileName();
 
         if (is_file($file)) {
             unlink($file);
@@ -113,9 +113,9 @@ class Database implements Processor
     /**
      * Filesystem config.
      *
-     * @return Config
+     * @return \BackupManager\Config\Config
      */
-    private function fileSystemConfig()
+    private function fileSystemConfig(): Config
     {
         return new Config([
             'local' => [
@@ -128,10 +128,10 @@ class Database implements Processor
     /**
      * Configuration for a given database type.
      *
-     * @param  DatabaseContract $database
-     * @return Config
+     * @param  \SSD\Backup\Jobs\Database $database
+     * @return \BackupManager\Config\Config
      */
-    private function databaseConfig(DatabaseContract $database)
+    private function databaseConfig(BaseDatabase $database): Config
     {
         return new Config([
             'config' => [
@@ -144,5 +144,4 @@ class Database implements Processor
             ]
         ]);
     }
-
 }

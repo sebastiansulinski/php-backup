@@ -1,26 +1,27 @@
-<?php namespace SSD\Backup\Processors;
+<?php
+
+namespace SSD\Backup\Processors;
 
 use SSD\Backup\Backup;
 
+use League\Flysystem\MountManager;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem as LeagueFilesystem;
-use League\Flysystem\MountManager;
 
 class Distributor
 {
     /**
      * Backup object instance.
      *
-     * @var Backup
+     * @var \SSD\Backup\Backup
      */
     protected $backup;
-
 
     /**
      * Distribution constructor.
      *
-     * @param Backup $backup
+     * @param \SSD\Backup\Backup $backup
      */
     public function __construct(Backup $backup)
     {
@@ -48,7 +49,7 @@ class Distributor
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         $remoteDirectory = $this->backup->getRemoteDirectory();
         $archiveFile = $this->backup->getArchiveName();

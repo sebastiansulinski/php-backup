@@ -2,58 +2,39 @@
 
 require "../vendor/autoload.php";
 
-
-use SSD\DotEnv\DotEnv;
-
 use SSD\Backup\Backup;
-
-use SSD\Backup\Remotes\Dropbox;
-use SSD\Backup\Remotes\Ftp;
-
 use SSD\Backup\Jobs\Job;
-use SSD\Backup\Jobs\Directory;
 use SSD\Backup\Jobs\File;
+use SSD\Backup\Jobs\Directory;
+use SSD\Backup\Remotes\Dropbox;
 use SSD\Backup\Jobs\MySQLDatabase;
 
-$dotenv = new DotEnv([
-    __DIR__ . '/.env'
-]);
-$dotenv->load();
-$dotenv->required([
-    'DROPBOX_SECRET',
-    'DROPBOX_OAUTH',
-    'FTP_HOST',
-    'FTP_USER',
-    'FTP_PASS',
-    'DOMAIN_NAME',
-    'DB_HOST',
-    'DB_PORT',
-    'DB_NAME',
-    'DB_USER',
-    'DB_PASS'
-]);
-
-
-// working directory
-$workingDirectory = __DIR__ . '/tmp';
+use SSD\DotEnv\DotEnv;
+use Illuminate\Filesystem\Filesystem;
 
 try {
 
+    $dotenv = new DotEnv([
+        __DIR__ . '/.env'
+    ]);
+    $dotenv->load();
+    $dotenv->required([
+        'DROPBOX_OAUTH',
+        'DOMAIN_NAME',
+        'DB_HOST',
+        'DB_PORT',
+        'DB_NAME',
+        'DB_USER',
+        'DB_PASS'
+    ]);
+
+
+    // working directory
+    $workingDirectory = __DIR__ . '/tmp';
+
     $remote = new Dropbox(
-        getenv('DROPBOX_OAUTH'),
-        getenv('DROPBOX_SECRET')
+        getenv('DROPBOX_OAUTH')
     );
-
-
-    //$remote = new Ftp(
-    //    getenv('FTP_HOST'),
-    //    getenv('FTP_USER'),
-    //    getenv('FTP_PASS'),
-    //    [
-    //        'root' => 'public_html'
-    //    ]
-    //);
-
 
     $backup = new Backup(
         $remote,
@@ -101,8 +82,13 @@ try {
 
 } catch (Exception $e) {
 
-    $file = $workingDirectory . DIRECTORY_SEPARATOR . 'error_log';
+    $filesystem = new Filesystem;
 
-    file_put_contents($file, $e->getMessage() . PHP_EOL, FILE_APPEND | LOCK_EX);
+    $filesystem->cleanDirectory($workingDirectory);
+
+    $filesystem->prepend(
+        $workingDirectory . DIRECTORY_SEPARATOR . 'error_log',
+        $e->getMessage() . PHP_EOL
+    );
 
 }

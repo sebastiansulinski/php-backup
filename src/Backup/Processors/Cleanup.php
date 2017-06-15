@@ -1,4 +1,6 @@
-<?php namespace SSD\Backup\Processors;
+<?php
+
+namespace SSD\Backup\Processors;
 
 use SSD\Backup\Backup;
 use SSD\Backup\Contracts\Processor;
@@ -8,13 +10,14 @@ class Cleanup implements Processor
     /**
      * Backup object instance.
      *
-     * @var Backup
+     * @var \SSD\Backup\Backup
      */
     private $backup;
 
     /**
      * Cleanup constructor.
-     * @param Backup $backup
+     *
+     * @param \SSD\Backup\Backup $backup
      */
     public function __construct(Backup $backup)
     {
@@ -24,23 +27,20 @@ class Cleanup implements Processor
     /**
      * Execute cleanup.
      *
-     * @return $this
+     * @return void
      */
-    public function execute()
+    public function execute(): void
     {
-        foreach($this->backup->getRemoval() as $file) {
+        foreach ($this->backup->getRemoval() as $file) {
 
-            if ( ! is_file($file)) {
+            if (!is_file($file)) {
                 continue;
             }
 
             unlink($file);
-
         }
 
         $this->backup->resetCollection();
-
-        return $this;
     }
 
     /**
@@ -48,10 +48,10 @@ class Cleanup implements Processor
      *
      * @return void
      */
-    public function clearOutdated()
+    public function clearOutdated(): void
     {
         $files = $this->backup->manager->listContents(
-            'remote://' . $this->backup->getRemoteDirectory(),
+            'remote://'.$this->backup->getRemoteDirectory(),
             true
         );
 
@@ -61,22 +61,19 @@ class Cleanup implements Processor
             return;
         }
 
-        $remove = ( $count - $this->backup->getNumberOfBackups() );
+        $remove = ($count - $this->backup->getNumberOfBackups());
 
         asort($files);
 
-        foreach($files as $key => $file) {
+        foreach ($files as $key => $file) {
 
-            if ( ($key + 1) > $remove ) {
-
+            if (($key + 1) > $remove) {
                 return;
-
             }
 
             $this->backup->manager->delete(
-                'remote://' . $this->backup->getRemoteDirectory() . '/' . $file['basename']
+                'remote://'.$this->backup->getRemoteDirectory().'/'.$file['basename']
             );
-
         }
     }
 }

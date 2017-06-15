@@ -1,6 +1,6 @@
-<?php namespace SSDTest\Jobs;
+<?php
 
-use InvalidArgumentException;
+namespace SSDTest\Jobs;
 
 use SSDTest\BaseCase;
 use SSD\Backup\Jobs\MySQLDatabase;
@@ -63,19 +63,6 @@ class DatabaseTest extends BaseCase
 
     /**
      * @test
-     *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Property foo is invalid
-     */
-    public function is_valid_throws_exception_with_invalid_constructor_property()
-    {
-        $database = new MySQLDatabase([
-            'foo' => 'bar'
-        ]);
-    }
-
-    /**
-     * @test
      */
     public function file_name_equals_by_constructor_assignment()
     {
@@ -84,10 +71,13 @@ class DatabaseTest extends BaseCase
             'name' => 'database_name',
             'user' => 'database_user',
             'password' => 'database_password',
-            'file_name' => 'test_database'
+            'fileName' => 'test_database'
         ]);
 
-        $this->assertEquals('test_database.sql', $database->fileName());
+        $this->assertEquals(
+            'test_database.sql',
+            $database->fileName()
+        );
     }
 
     /**
@@ -100,9 +90,12 @@ class DatabaseTest extends BaseCase
         $database->name = 'database_name';
         $database->user = 'database_user';
         $database->password = 'database_password';
-        $database->file_name = 'test_database';
+        $database->fileName = 'test_database';
 
-        $this->assertEquals('test_database.sql', $database->fileName());
+        $this->assertEquals(
+            'test_database.sql',
+            $database->fileName()
+        );
     }
 
     /**
@@ -117,7 +110,10 @@ class DatabaseTest extends BaseCase
             ->setPassword('database_password')
             ->setFileName('test_database');
 
-        $this->assertEquals('test_database.sql', $database->fileName());
+        $this->assertEquals(
+            'test_database.sql',
+            $database->fileName()
+        );
     }
 
     /**
@@ -132,7 +128,10 @@ class DatabaseTest extends BaseCase
             'password' => 'database_password'
         ]);
 
-        $this->assertContains($database->name . '_' . date('Y-m-d'), $database->fileName());
+        $this->assertContains(
+            $database->name . '_' . date('Y-m-d'),
+            $database->fileName()
+        );
     }
 
     /**
@@ -147,7 +146,10 @@ class DatabaseTest extends BaseCase
             'password' => 'database_password'
         ]);
 
-        $this->assertEquals('mysql', $database->type());
+        $this->assertEquals(
+            'mysql',
+            $database->type()
+        );
     }
 
     /**
@@ -162,7 +164,10 @@ class DatabaseTest extends BaseCase
             'password' => 'database_password'
         ]);
 
-        $this->assertEquals(3306, $database->port);
+        $this->assertEquals(
+            3306,
+            $database->port
+        );
     }
 
     /**
@@ -178,7 +183,10 @@ class DatabaseTest extends BaseCase
             'port' => 555
         ]);
 
-        $this->assertEquals(555, $database->port);
+        $this->assertEquals(
+            555,
+            $database->port
+        );
     }
 
     /**
@@ -193,7 +201,10 @@ class DatabaseTest extends BaseCase
         $database->password = 'database_password';
         $database->port = 555;
 
-        $this->assertEquals(555, $database->port);
+        $this->assertEquals(
+            555,
+            $database->port
+        );
     }
 
     /**
@@ -209,7 +220,10 @@ class DatabaseTest extends BaseCase
             ->setFileName('test_database')
             ->setPort(555);
 
-        $this->assertEquals(555, $database->port);
+        $this->assertEquals(
+            555,
+            $database->port
+        );
     }
 
 }

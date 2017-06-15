@@ -1,40 +1,14 @@
-<?php namespace SSDTest\Processors;
+<?php
 
-use TypeError;
+namespace SSDTest\Processors;
 
 use SSDTest\BaseCase;
 use SSD\Backup\Backup;
 use SSD\Backup\Jobs\Job;
 use SSD\Backup\Jobs\File as FileJob;
-use SSD\Backup\Processors\File;
 
 class FileTest extends BaseCase
 {
-    /**
-     * @test
-     *
-     * @expectedException TypeError
-     */
-    public function throws_error_without_both_valid_arguments()
-    {
-        $file = new File();
-    }
-
-    /**
-     * @test
-     *
-     * @expectedException TypeError
-     */
-    public function throws_error_without_second_valid_arguments()
-    {
-        $backup = new Backup(
-            $this->dropboxInstance(),
-            $this->working
-        );
-
-        $file = new File($backup);
-    }
-
     /**
      * @test
      */
@@ -42,19 +16,19 @@ class FileTest extends BaseCase
     {
         $backup = new Backup(
             $this->dropboxInstance(),
-            $this->working
+            $this->working()
         );
         $backup->addJob(new Job(
             new FileJob(
-                $this->css_file(),
-                $this->assets
+                $this->cssFile(),
+                $this->assets()
             ),
             'files'
         ));
         $backup->addJob(new Job(
             new FileJob(
-                $this->terms_file(),
-                $this->assets
+                $this->termsFile(),
+                $this->assets()
             ),
             'files'
         ));
