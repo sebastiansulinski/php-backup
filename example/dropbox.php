@@ -28,7 +28,6 @@ try {
         'DB_PASS'
     ]);
 
-
     // working directory
     $workingDirectory = __DIR__ . '/tmp';
 

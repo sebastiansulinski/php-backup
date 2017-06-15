@@ -1,5 +1,5 @@
 .DS_Store
-.idea/
+.idea
 .env
-/vendor/
-/example/tmp/
+/vendor
+/example/tmp
