@@ -14,39 +14,49 @@ This package makes use of
 You can watch this [video tutorial](https://ssdtutorials.com/courses/dropbox-backup) or read below.
 
 
-### Backing up to Dropbox
+### Backing up to Dropbox and sending Slack notifications along the way
+
+*To send `slack` notifications, `composer require maknz/slack` and [obtain the webhook for your slack channel](https://my.slack.com/services/new/incoming-webhook)
 
 ```
 require "../vendor/autoload.php";
 
 use SSD\DotEnv\DotEnv;
-
 use SSD\Backup\Backup;
-use SSD\Backup\Remotes\Dropbox;
-use SSD\Backup\Jobs\Directory;
 use SSD\Backup\Jobs\File;
+use SSD\Backup\Jobs\Directory;
+use SSD\Backup\Remotes\Dropbox;
 use SSD\Backup\Jobs\MySQLDatabase;
 
+use Carbon\Carbon
+use Maknz\Slack\Client as SlackClient;
 use Illuminate\Filesystem\Filesystem;
 
-try {
+$dotenv = new DotEnv([__DIR__ . '/.env']);
+$dotenv->load();
+$dotenv->required([
+    'DROPBOX_OAUTH',
+    'REMOTE_DIR_NAME',
+    'DB_HOST',
+    'DB_PORT',
+    'DB_NAME',
+    'DB_USER',
+    'DB_PASS'
+]);
 
-    $dotenv = new DotEnv([
-        __DIR__ . '/.env'
-    ]);
-    $dotenv->load();
-    $dotenv->required([
-        'DROPBOX_OAUTH',
-        'REMOTE_DIR_NAME',
-        'DB_HOST',
-        'DB_PORT',
-        'DB_NAME',
-        'DB_USER',
-        'DB_PASS'
-    ]);
-    
-    // working directory
-    $workingDirectory = __DIR__ . '/tmp';
+// working directory
+$workingDirectory = __DIR__ . '/tmp';
+
+// Slack client
+$client = new SlackClient('https://hooks.slack.com/your_slack_webhook', [
+    'username' => 'your_slack_username',
+    'channel' => '#your_slack_channel',
+    'link_names' => true
+]);
+
+$client->send('Project backup started at: ' . Carbon::now()->toDateTimeString());
+
+try {
 
     $remote = new Dropbox(
         getenv('DROPBOX_OAUTH')
@@ -99,7 +109,9 @@ try {
     // run backup
     $backup->run();
 
-} catch (Exception $e) {
+} catch (Exception $exception) {
+
+    $client->send('Project backup failed at: ' . Carbon::now()->toDateTimeString() .' with message: "'.$exception->getMessage().'"');
 
     $filesystem = new Filesystem;
     
@@ -107,8 +119,12 @@ try {
 
     $filesystem->prepend(
         $workingDirectory . DIRECTORY_SEPARATOR . 'error_log',
-        $e->getMessage() . PHP_EOL
+        $exception->getMessage() . PHP_EOL
     );
+
+} finally {
+ 
+    $client->send('Project backup finished at: ' . Carbon::now()->toDateTimeString());
 
 }
 ```
