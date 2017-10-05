@@ -29,8 +29,8 @@ use SSD\Backup\Remotes\Dropbox;
 use SSD\Backup\Jobs\MySQLDatabase;
 
 use Carbon\Carbon;
-use Maknz\Slack\Client as SlackClient;
 use Illuminate\Filesystem\Filesystem;
+use Maknz\Slack\Client as SlackClient;
 
 $dotenv = new DotEnv([__DIR__ . '/.env']);
 $dotenv->load();
