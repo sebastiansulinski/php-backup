@@ -16,7 +16,7 @@ You can watch this [video tutorial](https://ssdtutorials.com/courses/dropbox-bac
 
 ### Backing up to Dropbox and sending Slack notifications along the way
 
-*To send `slack` notifications, `composer require maknz/slack` and [obtain the webhook for your slack channel](https://my.slack.com/services/new/incoming-webhook)
+*To send `slack` notifications, `composer require maknz/slack` and [create an incoming webhook](https://my.slack.com/services/new/incoming-webhook)
 
 ```php
 require "../vendor/autoload.php";
