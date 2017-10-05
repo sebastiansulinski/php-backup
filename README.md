@@ -28,7 +28,7 @@ use SSD\Backup\Jobs\Directory;
 use SSD\Backup\Remotes\Dropbox;
 use SSD\Backup\Jobs\MySQLDatabase;
 
-use Carbon\Carbon
+use Carbon\Carbon;
 use Maknz\Slack\Client as SlackClient;
 use Illuminate\Filesystem\Filesystem;
 
