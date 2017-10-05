@@ -2,6 +2,6 @@
 
 namespace SSD\Backup\Contracts;
 
-interface File
+interface File extends Job
 {
 }
