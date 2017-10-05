@@ -18,7 +18,7 @@ You can watch this [video tutorial](https://ssdtutorials.com/courses/dropbox-bac
 
 *To send `slack` notifications, `composer require maknz/slack` and [obtain the webhook for your slack channel](https://my.slack.com/services/new/incoming-webhook)
 
-```
+```php
 require "../vendor/autoload.php";
 
 use SSD\DotEnv\DotEnv;
@@ -131,15 +131,13 @@ try {
 
 ### Backing up to Ftp
 
-```
+```php
 require "../vendor/autoload.php";
 
 use SSD\DotEnv\DotEnv;
-
 use SSD\Backup\Backup;
-use SSD\Backup\Remotes\Ftp;
-
 use SSD\Backup\Jobs\File;
+use SSD\Backup\Remotes\Ftp;
 use SSD\Backup\Jobs\Directory;
 use SSD\Backup\Jobs\MySQLDatabase;
 
