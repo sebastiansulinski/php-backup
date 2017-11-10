@@ -2,6 +2,8 @@
 
 A simple package for backing up mysql databases, files and directories to Dropbox and FTP.
 
+[![Build Status](https://travis-ci.org/sebastiansulinski/php-backup.svg?branch=master)](https://travis-ci.org/sebastiansulinski/php-backup)
+
 This package makes use of
 
 - [backup-manager/backup-manager](https://github.com/backup-manager/backup-manager)
