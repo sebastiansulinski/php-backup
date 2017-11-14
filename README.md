@@ -3,7 +3,7 @@
 A simple package for backing up mysql databases, files and directories to Dropbox and FTP.
 
 [![Build Status](https://travis-ci.org/sebastiansulinski/php-backup.svg?branch=master)](https://travis-ci.org/sebastiansulinski/php-backup)
-[![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/sebastiansulinski/php-backup)
+[![Github All Releases](https://img.shields.io/github/downloads/sebastiansulinski/php-backup/total.svg)](https://github.com/sebastiansulinski/php-backup)
 
 This package makes use of
 
