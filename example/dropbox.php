@@ -14,9 +14,9 @@ use Illuminate\Filesystem\Filesystem;
 
 try {
 
-    $dotenv = new DotEnv([
+    $dotenv = new DotEnv(
         __DIR__ . '/.env'
-    ]);
+    );
     $dotenv->load();
     $dotenv->required([
         'DROPBOX_OAUTH',
