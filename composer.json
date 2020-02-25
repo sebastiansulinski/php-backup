@@ -15,7 +15,8 @@
     "spatie/flysystem-dropbox": "^1.0",
     "nesbot/carbon": "^1.22",
     "backup-manager/backup-manager": "^1.1",
-    "illuminate/filesystem": "^5.5"
+    "illuminate/filesystem": "^5.5",
+    "sebastiansulinski/dotenv": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.4"

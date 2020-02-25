@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b3dbb4f5d1faf66b01d274e43bc39838",
+    "content-hash": "7022081a95b64d81b6e809652fa3b9c3",
     "packages": [
         {
             "name": "backup-manager/backup-manager",
@@ -753,6 +753,45 @@
                 "simple-cache"
             ],
             "time": "2017-01-02T13:31:39+00:00"
+        },
+        {
+            "name": "sebastiansulinski/dotenv",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastiansulinski/dotenv.git",
+                "reference": "a298fa533e641aa7ea4cbf89061613226de87bd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastiansulinski/dotenv/zipball/a298fa533e641aa7ea4cbf89061613226de87bd4",
+                "reference": "a298fa533e641aa7ea4cbf89061613226de87bd4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SSD\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Sulinski",
+                    "email": "info@ssdtutorials.com"
+                }
+            ],
+            "description": "DotEnv package - work derived from vlucas/phpdotenv",
+            "time": "2018-02-05T10:43:18+00:00"
         },
         {
             "name": "spatie/dropbox-api",
@@ -1887,6 +1926,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2017-08-03T14:08:16+00:00"
         },
         {
