@@ -13,14 +13,14 @@ abstract class Filesystem implements JobContract
      *
      * @var string
      */
-    protected $fullPath;
+    protected string $fullPath;
 
     /**
      * Absolute path to the root directory.
      *
-     * @var string
+     * @var string|null
      */
-    protected $rootPath;
+    protected ?string $rootPath;
 
     /**
      * Filesystem constructor.
@@ -32,9 +32,9 @@ abstract class Filesystem implements JobContract
     {
         $this->setFullPath($fullPath);
 
-        if (!is_null($rootPath)) {
-            $this->setRootPath($rootPath);
-        }
+        !is_null($rootPath)
+            ? $this->setRootPath($rootPath)
+            : $this->rootPath = null;
     }
 
     /**
@@ -80,7 +80,9 @@ abstract class Filesystem implements JobContract
     public function setRootPath(string $rootPath): void
     {
         if (!is_dir($rootPath)) {
-            throw new InvalidArgumentException("{$rootPath} is not a valid directory.");
+            throw new InvalidArgumentException(sprintf(
+                '%s is not a valid directory.', $rootPath
+            ));
         }
 
         $this->rootPath = $rootPath;

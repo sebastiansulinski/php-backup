@@ -14,7 +14,7 @@ class Directory extends Filesystem implements DirectoryContract
      *
      * @var array
      */
-    public $exclude = [];
+    public array $exclude;
 
     /**
      * Directory constructor.
@@ -27,9 +27,7 @@ class Directory extends Filesystem implements DirectoryContract
     {
         parent::__construct($fullPath, $rootPath);
 
-        if (!empty($exclude)) {
-            $this->setExclude($exclude);
-        }
+        $this->setExclude($exclude);
     }
 
     /**
@@ -40,7 +38,9 @@ class Directory extends Filesystem implements DirectoryContract
     public function setFullPath(string $fullPath): void
     {
         if (!is_dir($fullPath)) {
-            throw new InvalidArgumentException("{$fullPath} is not a valid directory.");
+            throw new InvalidArgumentException(sprintf(
+                '%s is not a valid directory.', $fullPath
+            ));
         }
 
         $this->fullPath = $fullPath;
@@ -52,9 +52,11 @@ class Directory extends Filesystem implements DirectoryContract
      * @param  array $exclude
      * @return void
      */
-    private function setExclude(array $exclude): void
+    private function setExclude(array $exclude = []): void
     {
-        $this->exclude = array_map([$this, 'trimExcludePaths'], $exclude);
+        $this->exclude = !empty($exclude)
+            ? array_map([$this, 'trimExcludePaths'], $exclude)
+            : [];
     }
 
     /**

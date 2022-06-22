@@ -50,7 +50,7 @@ class CleanupTest extends BaseCase
             'Collection is not empty'
         );
 
-        $this->assertFileNotExists($backup->archivePath());
+        $this->assertFileDoesNotExist($backup->archivePath());
 
     }
 }

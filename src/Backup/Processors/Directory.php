@@ -14,15 +14,15 @@ class Directory extends Filesystem implements Processor
     /**
      * Add directory and its content to the collection.
      *
-     * @param  \SSD\Backup\Jobs\Filesystem $directory
+     * @param  \SSD\Backup\Jobs\Filesystem $resource
      * @param  string $namespace
      * @return void
      */
-    protected function add(FilesystemJob $directory, $namespace = ''): void
+    protected function add(FilesystemJob $resource, $namespace = ''): void
     {
         $filesystem = new LeagueFilesystem(
             new Local(
-                $directory->getRootPath(),
+                $resource->getRootPath(),
                 LOCK_EX,
                 Local::SKIP_LINKS
             ),
@@ -31,9 +31,9 @@ class Directory extends Filesystem implements Processor
             ]
         );
 
-        $collection = $filesystem->listContents($directory->asset(), true);
+        $collection = $filesystem->listContents($resource->asset(), true);
 
-        $this->addToCollection($directory, $namespace, $collection);
+        $this->addToCollection($resource, $collection, $namespace);
     }
 
     /**
@@ -44,7 +44,7 @@ class Directory extends Filesystem implements Processor
      * @param  array $collection
      * @return void
      */
-    private function addToCollection(FilesystemJob $directory, $namespace = '', $collection): void
+    private function addToCollection(FilesystemJob $directory, array $collection, string $namespace = ''): void
     {
         foreach ($collection as $item) {
 
@@ -71,18 +71,15 @@ class Directory extends Filesystem implements Processor
      * Check if a given path is excluded.
      *
      * @param  \SSD\Backup\Jobs\Filesystem $directory
-     * @param  string $path
-     * @param  string $fullPath
+     * @param  string  $path
+     * @param  string  $fullPath
      * @return bool
      */
-    private function isExcluded(FilesystemJob $directory, $path, $fullPath): bool
+    private function isExcluded(FilesystemJob $directory, string $path, string $fullPath): bool
     {
         foreach ($directory->exclude as $excluded) {
 
-            if (
-                strpos($fullPath, $excluded) === 0 ||
-                strpos($path, $excluded) === 0
-            ) {
+            if (str_starts_with($fullPath, $excluded) || str_starts_with($path, $excluded)) {
                 return true;
             }
         }

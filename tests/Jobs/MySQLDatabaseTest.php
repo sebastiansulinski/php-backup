@@ -5,9 +5,8 @@ namespace SSDTest\Jobs;
 use SSDTest\BaseCase;
 use SSD\Backup\Jobs\MySQLDatabase;
 
-class DatabaseTest extends BaseCase
+class MySQLDatabaseTest extends BaseCase
 {
-
     /**
      * @test
      */
@@ -128,7 +127,7 @@ class DatabaseTest extends BaseCase
             'password' => 'database_password'
         ]);
 
-        $this->assertContains(
+        $this->assertStringStartsWith(
             $database->name . '_' . date('Y-m-d'),
             $database->fileName()
         );

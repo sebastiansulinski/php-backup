@@ -10,15 +10,16 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": "^7.1",
+    "php": "^8.0",
     "league/flysystem": "^1.0",
     "spatie/flysystem-dropbox": "^1.0",
-    "nesbot/carbon": "^1.22",
-    "backup-manager/backup-manager": "^1.1",
-    "illuminate/filesystem": "^5.5"
+    "nesbot/carbon": "^2.0",
+    "backup-manager/backup-manager": "^3.0",
+    "illuminate/filesystem": "^9.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.4"
+    "phpunit/phpunit": "^9.0",
+    "ext-zip": "*"
   },
   "autoload": {
     "psr-4": {
