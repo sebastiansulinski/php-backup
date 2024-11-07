@@ -10,16 +10,14 @@ class File extends Filesystem implements Processor
     /**
      * Add single file to the collection.
      *
-     * @param  \SSD\Backup\Jobs\Filesystem $file
-     * @param  string $namespace
-     * @return void
+     * @param  string  $namespace
      */
     protected function add(FilesystemJob $file, $namespace = ''): void
     {
         $this->backup->addToCollection(
             [
                 'name' => $file->asset(),
-                'path' => $file->getFullPath()
+                'path' => $file->getFullPath(),
             ],
             $namespace
         );

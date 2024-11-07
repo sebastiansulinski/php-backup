@@ -10,16 +10,18 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": "^8.0",
-    "league/flysystem": "^1.0",
-    "spatie/flysystem-dropbox": "^1.0",
-    "nesbot/carbon": "^2.0",
-    "backup-manager/backup-manager": "^3.0",
-    "illuminate/filesystem": "^9.0"
+    "php": "^8.2",
+    "league/flysystem": "^3.0",
+    "spatie/flysystem-dropbox": "^3.0",
+    "nesbot/carbon": "^3.8",
+    "backup-manager/backup-manager": "^3.1",
+    "illuminate/filesystem": "^11.9",
+    "league/flysystem-ftp": "^3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.0",
-    "ext-zip": "*"
+    "phpunit/phpunit": "^11.0.1",
+    "ext-zip": "*",
+    "laravel/pint": "^1.18"
   },
   "autoload": {
     "psr-4": {

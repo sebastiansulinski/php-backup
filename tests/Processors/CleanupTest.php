@@ -2,21 +2,19 @@
 
 namespace SSDTest\Processors;
 
-use ZipArchive;
-
-use SSDTest\BaseCase;
+use PHPUnit\Framework\Attributes\Test;
 use SSD\Backup\Backup;
-use SSD\Backup\Jobs\Job;
 use SSD\Backup\Jobs\File;
+use SSD\Backup\Jobs\Job;
 use SSD\Backup\Processors\Archive;
 use SSD\Backup\Processors\Cleanup;
+use SSDTest\BaseCase;
+use ZipArchive;
 
 class CleanupTest extends BaseCase
 {
-    /**
-     * @test
-     */
-    public function cleans_collection()
+    #[Test]
+    public function cleans_collection(): void
     {
         $backup = new Backup(
             $this->dropboxInstance(),

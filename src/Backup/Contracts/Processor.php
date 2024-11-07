@@ -6,8 +6,6 @@ interface Processor
 {
     /**
      * Execute job.
-     *
-     * @return void
      */
     public function execute(): void;
 }

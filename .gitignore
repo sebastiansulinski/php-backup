@@ -3,3 +3,5 @@
 .env
 /vendor
 /example/tmp
+.phpunit.result.cache
+.phpunit.cache/

@@ -13,8 +13,6 @@ class PostgreSQLDatabase extends Database
 
     /**
      * Database type.
-     *
-     * @return string
      */
     public function type(): string
     {

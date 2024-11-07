@@ -13,8 +13,6 @@ class MySQLDatabase extends Database
 
     /**
      * Database type.
-     *
-     * @return string
      */
     public function type(): string
     {

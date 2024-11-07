@@ -4,7 +4,6 @@ namespace SSD\Backup\Processors;
 
 use SSD\Backup\Backup;
 use SSD\Backup\Contracts\Processor;
-
 use ZipArchive;
 
 class Archive implements Processor
@@ -25,9 +24,6 @@ class Archive implements Processor
 
     /**
      * Archive constructor.
-     *
-     * @param \SSD\Backup\Backup $backup
-     * @param \ZipArchive $archive
      */
     public function __construct(Backup $backup, ZipArchive $archive)
     {
@@ -37,8 +33,6 @@ class Archive implements Processor
 
     /**
      * Convert collection to the archive.
-     *
-     * @return void
      */
     public function execute(): void
     {
@@ -60,8 +54,6 @@ class Archive implements Processor
 
     /**
      * Add files from the collection to the archive.
-     *
-     * @return void
      */
     private function processCollection(): void
     {
@@ -72,10 +64,6 @@ class Archive implements Processor
 
     /**
      * Process item group.
-     *
-     * @param  array $items
-     * @param  string $namespace
-     * @return void
      */
     private function processItemGroup(array $items, string $namespace): void
     {
@@ -98,10 +86,6 @@ class Archive implements Processor
 
     /**
      * Prepend namespace to the path.
-     *
-     * @param  string $namespace
-     * @param  array $item
-     * @return string
      */
     private function namespacedName(array $item, string $namespace): string
     {

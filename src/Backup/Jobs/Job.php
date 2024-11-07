@@ -9,7 +9,7 @@ class Job
     /**
      * Job object instance.
      *
-     * @var \SSD\Backup\Contracts\Job $job
+     * @var \SSD\Backup\Contracts\Job
      */
     public $job;
 
@@ -22,9 +22,6 @@ class Job
 
     /**
      * Job constructor.
-     *
-     * @param \SSD\Backup\Contracts\Job $job
-     * @param string $namespace
      */
     public function __construct(JobContract $job, string $namespace = '')
     {

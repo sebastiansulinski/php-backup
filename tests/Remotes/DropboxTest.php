@@ -2,19 +2,16 @@
 
 namespace SSDTest\Remotes;
 
-
+use League\Flysystem\FilesystemOperator;
+use PHPUnit\Framework\Attributes\Test;
 use SSDTest\BaseCase;
-
-use League\Flysystem\FilesystemInterface;
 
 class DropboxTest extends BaseCase
 {
-    /**
-     * @test
-     */
-    public function remote_returns_filesystem_instance()
+    #[Test]
+    public function remote_returns_filesystem_instance(): void
     {
         $dropbox = $this->dropboxInstance();
-        $this->assertInstanceOf(FilesystemInterface::class, $dropbox->remote);
+        $this->assertInstanceOf(FilesystemOperator::class, $dropbox->remote);
     }
 }

@@ -2,35 +2,30 @@
 
 namespace SSDTest\Jobs;
 
-use SSDTest\BaseCase;
+use PHPUnit\Framework\Attributes\Test;
 use SSD\Backup\Jobs\Directory;
+use SSDTest\BaseCase;
 
 class DirectoryTest extends BaseCase
 {
-    /**
-     * @test
-     */
-    public function returns_css_directory_name_without_second_argument()
+    #[Test]
+    public function returns_css_directory_name_without_second_argument(): void
     {
         $directory = new Directory($this->cssDirectory());
 
         $this->assertEquals('css', $directory->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_component_directory_name_with_parent_directory_without_second_argument()
+    #[Test]
+    public function returns_component_directory_name_with_parent_directory_without_second_argument(): void
     {
         $directory = new Directory($this->cssComponentsDirectory());
 
         $this->assertEquals('components', $directory->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_css_directory_name_from_full_path()
+    #[Test]
+    public function returns_css_directory_name_from_full_path(): void
     {
         $directory = new Directory(
             $this->cssDirectory(),
@@ -40,10 +35,8 @@ class DirectoryTest extends BaseCase
         $this->assertEquals('css', $directory->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_component_directory_name_with_parent_directory()
+    #[Test]
+    public function returns_component_directory_name_with_parent_directory(): void
     {
         $directory = new Directory(
             $this->cssComponentsDirectory(),
@@ -53,10 +46,8 @@ class DirectoryTest extends BaseCase
         $this->assertEquals('css/components', $directory->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_component_directory_only()
+    #[Test]
+    public function returns_component_directory_only(): void
     {
         $directory = new Directory(
             $this->cssComponentsDirectory(),
@@ -66,10 +57,8 @@ class DirectoryTest extends BaseCase
         $this->assertEquals('components', $directory->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_null_for_same_full_and_root_path()
+    #[Test]
+    public function returns_null_for_same_full_and_root_path(): void
     {
         $directory = new Directory(
             $this->cssComponentsDirectory(),
@@ -79,10 +68,8 @@ class DirectoryTest extends BaseCase
         $this->assertEmpty($directory->asset());
     }
 
-    /**
-     * @test
-     */
-    public function empty_exclusions()
+    #[Test]
+    public function empty_exclusions(): void
     {
         $directory = new Directory(
             $this->cssComponentsDirectory(),
@@ -92,20 +79,17 @@ class DirectoryTest extends BaseCase
         $this->assertEmpty($directory->exclude);
     }
 
-    /**
-     * @test
-     */
-    public function exclusions_not_empty()
+    #[Test]
+    public function exclusions_not_empty(): void
     {
         $directory = new Directory(
             $this->cssDirectory(),
             $this->cssDirectory(),
             [
-                $this->cssComponentsDirectory()
+                $this->cssComponentsDirectory(),
             ]
         );
 
         $this->assertCount(1, $directory->exclude);
     }
-
 }

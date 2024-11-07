@@ -2,32 +2,30 @@
 
 namespace SSD\Backup\Processors;
 
+use League\Flysystem\DirectoryListing;
+use League\Flysystem\Filesystem as LeagueFilesystem;
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\Flysystem\Visibility;
 use SSD\Backup\Contracts\Processor;
 use SSD\Backup\Jobs\Filesystem as FilesystemJob;
-
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\Filesystem as LeagueFilesystem;
 
 class Directory extends Filesystem implements Processor
 {
     /**
      * Add directory and its content to the collection.
      *
-     * @param  \SSD\Backup\Jobs\Filesystem $resource
-     * @param  string $namespace
-     * @return void
+     * @throws \League\Flysystem\FilesystemException
      */
     protected function add(FilesystemJob $resource, $namespace = ''): void
     {
         $filesystem = new LeagueFilesystem(
-            new Local(
-                $resource->getRootPath(),
-                LOCK_EX,
-                Local::SKIP_LINKS
+            adapter: new LocalFilesystemAdapter(
+                location: $resource->getRootPath(),
+                writeFlags: LOCK_EX,
+                linkHandling: LocalFilesystemAdapter::SKIP_LINKS
             ),
-            [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC
+            config: [
+                'visibility' => Visibility::PUBLIC,
             ]
         );
 
@@ -38,13 +36,8 @@ class Directory extends Filesystem implements Processor
 
     /**
      * Add item to collection.
-     *
-     * @param  \SSD\Backup\Jobs\Filesystem $directory
-     * @param  string $namespace
-     * @param  array $collection
-     * @return void
      */
-    private function addToCollection(FilesystemJob $directory, array $collection, string $namespace = ''): void
+    private function addToCollection(FilesystemJob $directory, DirectoryListing $collection, string $namespace = ''): void
     {
         foreach ($collection as $item) {
 
@@ -60,7 +53,7 @@ class Directory extends Filesystem implements Processor
             $this->backup->addToCollection(
                 [
                     'name' => $item['path'],
-                    'path' => $fullPath
+                    'path' => $fullPath,
                 ],
                 $namespace
             );
@@ -69,11 +62,6 @@ class Directory extends Filesystem implements Processor
 
     /**
      * Check if a given path is excluded.
-     *
-     * @param  \SSD\Backup\Jobs\Filesystem $directory
-     * @param  string  $path
-     * @param  string  $fullPath
-     * @return bool
      */
     private function isExcluded(FilesystemJob $directory, string $path, string $fullPath): bool
     {

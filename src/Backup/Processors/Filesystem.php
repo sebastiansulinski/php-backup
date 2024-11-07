@@ -23,9 +23,6 @@ abstract class Filesystem
 
     /**
      * Constructor.
-     *
-     * @param \SSD\Backup\Backup $backup
-     * @param array $jobs
      */
     public function __construct(Backup $backup, array $jobs)
     {
@@ -35,8 +32,6 @@ abstract class Filesystem
 
     /**
      * Collect items.
-     *
-     * @return void
      */
     public function execute(): void
     {
@@ -48,9 +43,7 @@ abstract class Filesystem
     /**
      * Add to the collection.
      *
-     * @param  \SSD\Backup\Jobs\Filesystem $resource
-     * @param  string $namespace
-     * @return void
+     * @param  string  $namespace
      */
     abstract protected function add(FilesystemJob $resource, $namespace = ''): void;
 }

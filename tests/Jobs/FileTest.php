@@ -2,25 +2,22 @@
 
 namespace SSDTest\Jobs;
 
-use SSDTest\BaseCase;
+use PHPUnit\Framework\Attributes\Test;
 use SSD\Backup\Jobs\File;
+use SSDTest\BaseCase;
 
 class FileTest extends BaseCase
 {
-    /**
-     * @test
-     */
-    public function returns_file_name_without_second_argument()
+    #[Test]
+    public function returns_file_name_without_second_argument(): void
     {
         $file = new File($this->termsFile());
 
         $this->assertEquals('terms.txt', $file->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_file_name_from_full_path()
+    #[Test]
+    public function returns_file_name_from_full_path(): void
     {
         $file = new File(
             $this->termsFile(),
@@ -30,20 +27,16 @@ class FileTest extends BaseCase
         $this->assertEquals('terms.txt', $file->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_file_name_without_its_directory()
+    #[Test]
+    public function returns_file_name_without_its_directory(): void
     {
         $file = new File($this->cssFile());
 
         $this->assertEquals('app.css', $file->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_file_name_with_its_directory()
+    #[Test]
+    public function returns_file_name_with_its_directory(): void
     {
         $file = new File(
             $this->cssFile(),
@@ -53,10 +46,8 @@ class FileTest extends BaseCase
         $this->assertEquals('css/app.css', $file->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_component_file_name_with_its_directories()
+    #[Test]
+    public function returns_component_file_name_with_its_directories(): void
     {
         $file = new File(
             $this->cssComponentsFile(),
@@ -66,10 +57,8 @@ class FileTest extends BaseCase
         $this->assertEquals('css/components/text.css', $file->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_component_file_name_with_only_component_directory()
+    #[Test]
+    public function returns_component_file_name_with_only_component_directory(): void
     {
         $file = new File(
             $this->cssComponentsFile(),
@@ -79,30 +68,24 @@ class FileTest extends BaseCase
         $this->assertEquals('components/text.css', $file->asset());
     }
 
-    /**
-     * @test
-     */
-    public function returns_full_path()
+    #[Test]
+    public function returns_full_path(): void
     {
         $file = new File($this->cssFile());
 
         $this->assertEquals($this->cssFile(), $file->getFullPath());
     }
 
-    /**
-     * @test
-     */
-    public function returns_null_for_root_path_without_second_constructor_argument()
+    #[Test]
+    public function returns_null_for_root_path_without_second_constructor_argument(): void
     {
         $file = new File($this->cssFile());
 
         $this->assertEmpty($file->getRootPath());
     }
 
-    /**
-     * @test
-     */
-    public function returns_root_path_with_second_constructor_argument()
+    #[Test]
+    public function returns_root_path_with_second_constructor_argument(): void
     {
         $file = new File(
             $this->cssFile(),
@@ -111,5 +94,4 @@ class FileTest extends BaseCase
 
         $this->assertEquals($this->assets(), $file->getRootPath());
     }
-
 }

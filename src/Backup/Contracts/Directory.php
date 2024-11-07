@@ -2,6 +2,4 @@
 
 namespace SSD\Backup\Contracts;
 
-interface Directory extends Job
-{
-}
+interface Directory extends Job {}

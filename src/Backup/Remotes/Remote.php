@@ -2,12 +2,9 @@
 
 namespace SSD\Backup\Remotes;
 
+use League\Flysystem\FilesystemOperator;
+
 abstract class Remote
 {
-    /**
-     * Filesystem object.
-     *
-     * @var \League\Flysystem\FilesystemInterface
-     */
-    public $remote;
+    public FilesystemOperator $remote;
 }

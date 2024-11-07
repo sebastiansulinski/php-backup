@@ -2,20 +2,19 @@
 
 namespace SSDTest;
 
+use PHPUnit\Framework\Attributes\Test;
 use SSD\Backup\Backup;
-use SSD\Backup\Jobs\Job;
-use SSD\Backup\Jobs\File;
 use SSD\Backup\Jobs\Directory;
-use SSD\Backup\Remotes\Dropbox;
+use SSD\Backup\Jobs\File;
+use SSD\Backup\Jobs\Job;
 use SSD\Backup\Jobs\MySQLDatabase;
 use SSD\Backup\Jobs\PostgreSQLDatabase;
+use SSD\Backup\Remotes\Dropbox;
 
 class BackupTest extends BaseCase
 {
-    /**
-     * @test
-     */
-    public function returns_remote_instance()
+    #[Test]
+    public function returns_remote_instance(): void
     {
         $backup = new Backup($this->dropboxInstance(), $this->working());
 
@@ -23,10 +22,8 @@ class BackupTest extends BaseCase
 
     }
 
-    /**
-     * @test
-     */
-    public function returns_correct_local_directory()
+    #[Test]
+    public function returns_correct_local_directory(): void
     {
         $backup = new Backup($this->dropboxInstance(), $this->working());
 
@@ -34,10 +31,8 @@ class BackupTest extends BaseCase
 
     }
 
-    /**
-     * @test
-     */
-    public function sets_and_returns_correct_remote_directory()
+    #[Test]
+    public function sets_and_returns_correct_remote_directory(): void
     {
         $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->setRemoteDirectory('test');
@@ -46,10 +41,8 @@ class BackupTest extends BaseCase
 
     }
 
-    /**
-     * @test
-     */
-    public function sets_and_returns_correct_archive_name()
+    #[Test]
+    public function sets_and_returns_correct_archive_name(): void
     {
         $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->setArchiveName('test_archive');
@@ -58,10 +51,8 @@ class BackupTest extends BaseCase
 
     }
 
-    /**
-     * @test
-     */
-    public function returns_correct_archive_path()
+    #[Test]
+    public function returns_correct_archive_path(): void
     {
         $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->setArchiveName('test_archive');
@@ -70,10 +61,8 @@ class BackupTest extends BaseCase
 
     }
 
-    /**
-     * @test
-     */
-    public function adds_jobs()
+    #[Test]
+    public function adds_jobs(): void
     {
         $backup = new Backup($this->dropboxInstance(), $this->working());
         $backup->addJob(new Job(
@@ -81,7 +70,7 @@ class BackupTest extends BaseCase
                 'host' => 'foo',
                 'name' => 'bar',
                 'user' => 'abc',
-                'password' => 'password'
+                'password' => 'password',
             ]),
             'database'
         ));
@@ -90,7 +79,7 @@ class BackupTest extends BaseCase
                 'host' => 'foo',
                 'name' => 'bar',
                 'user' => 'abc',
-                'password' => 'password'
+                'password' => 'password',
             ]),
             'database'
         ));
@@ -156,5 +145,4 @@ class BackupTest extends BaseCase
         );
 
     }
-
 }

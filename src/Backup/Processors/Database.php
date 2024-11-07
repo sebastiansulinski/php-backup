@@ -2,16 +2,15 @@
 
 namespace SSD\Backup\Processors;
 
+use BackupManager\Compressors;
+use BackupManager\Config\Config;
+use BackupManager\Databases;
+use BackupManager\Filesystems;
+use BackupManager\Filesystems\Destination;
+use BackupManager\Manager;
 use SSD\Backup\Backup;
 use SSD\Backup\Contracts\Processor;
 use SSD\Backup\Jobs\Database as BaseDatabase;
-
-use BackupManager\Manager;
-use BackupManager\Databases;
-use BackupManager\Filesystems;
-use BackupManager\Compressors;
-use BackupManager\Config\Config;
-use BackupManager\Filesystems\Destination;
 
 class Database implements Processor
 {
@@ -36,13 +35,8 @@ class Database implements Processor
      */
     private $workingDir;
 
-
     /**
      * Database constructor.
-     *
-     * @param \SSD\Backup\Backup $backup
-     * @param array $jobs
-     * @param string $workingDir
      */
     public function __construct(Backup $backup, array $jobs, string $workingDir)
     {
@@ -53,8 +47,6 @@ class Database implements Processor
 
     /**
      * Execute backup.
-     *
-     * @return void
      */
     public function execute(): void
     {
@@ -65,10 +57,6 @@ class Database implements Processor
 
     /**
      * Process single backup job.
-     *
-     * @param  \SSD\Backup\Jobs\Database $database
-     * @param  string $namespace
-     * @return void
      */
     private function instance(BaseDatabase $database, string $namespace): void
     {
@@ -88,13 +76,12 @@ class Database implements Processor
         $compressors = new Compressors\CompressorProvider;
         $compressors->add(new Compressors\NullCompressor);
 
-
         $manager = new Manager($filesystems, $databases, $compressors);
 
         $manager->makeBackup()->run(
             'config',
             [
-                new Destination('local', $database->fileName())
+                new Destination('local', $database->fileName()),
             ],
             'null'
         );
@@ -102,7 +89,7 @@ class Database implements Processor
         $this->backup->addToCollection(
             [
                 'name' => $database->fileName(),
-                'path' => $file
+                'path' => $file,
             ],
             $namespace
         );
@@ -112,8 +99,6 @@ class Database implements Processor
 
     /**
      * Filesystem config.
-     *
-     * @return \BackupManager\Config\Config
      */
     private function fileSystemConfig(): Config
     {
@@ -121,15 +106,12 @@ class Database implements Processor
             'local' => [
                 'type' => 'Local',
                 'root' => $this->workingDir,
-            ]
+            ],
         ]);
     }
 
     /**
      * Configuration for a given database type.
-     *
-     * @param  \SSD\Backup\Jobs\Database $database
-     * @return \BackupManager\Config\Config
      */
     private function databaseConfig(BaseDatabase $database): Config
     {
@@ -140,8 +122,8 @@ class Database implements Processor
                 'port' => $database->port,
                 'user' => $database->user,
                 'pass' => $database->password,
-                'database' => $database->name
-            ]
+                'database' => $database->name,
+            ],
         ]);
     }
 }

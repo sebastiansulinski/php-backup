@@ -2,23 +2,20 @@
 
 namespace SSD\Backup;
 
-use SSD\Backup\Jobs\Job;
-use SSD\Backup\Remotes\Remote;
-
-use SSD\Backup\Jobs\Database;
-use SSD\Backup\Contracts\File;
+use Carbon\Carbon;
+use InvalidArgumentException;
 use SSD\Backup\Contracts\Directory;
-
-use SSD\Backup\Processors\File as FileProcessor;
+use SSD\Backup\Contracts\File;
+use SSD\Backup\Jobs\Database;
+use SSD\Backup\Jobs\Job;
 use SSD\Backup\Processors\Archive as ArchiveProcessor;
 use SSD\Backup\Processors\Cleanup as CleanupProcessor;
 use SSD\Backup\Processors\Database as DatabaseProcessor;
 use SSD\Backup\Processors\Directory as DirectoryProcessor;
 use SSD\Backup\Processors\Distributor as DistributorProcessor;
-
+use SSD\Backup\Processors\File as FileProcessor;
+use SSD\Backup\Remotes\Remote;
 use ZipArchive;
-use Carbon\Carbon;
-use InvalidArgumentException;
 
 class Backup
 {
@@ -107,18 +104,14 @@ class Backup
      */
     private $noOfBackups = 0;
 
-
     /**
      * Backup constructor.
-     *
-     * @param \SSD\Backup\Remotes\Remote $remote
-     * @param string $localWorkingDir
      */
     public function __construct(
         Remote $remote,
         string $localWorkingDir
     ) {
-        if (!is_dir($localWorkingDir)) {
+        if (! is_dir($localWorkingDir)) {
             throw new InvalidArgumentException('Invalid local working directory.');
         }
 
@@ -128,8 +121,6 @@ class Backup
 
     /**
      * Get path to the local working directory.
-     *
-     * @return string
      */
     public function getLocalWorkingDirectory(): string
     {
@@ -138,9 +129,6 @@ class Backup
 
     /**
      * Set remote directory.
-     *
-     * @param  string $directory
-     * @return self
      */
     public function setRemoteDirectory(string $directory): self
     {
@@ -151,8 +139,6 @@ class Backup
 
     /**
      * Get remote directory name.
-     *
-     * @return string
      */
     public function getRemoteDirectory(): string
     {
@@ -161,9 +147,6 @@ class Backup
 
     /**
      * Set archive name.
-     *
-     * @param  string $name
-     * @return self
      */
     public function setArchiveName(string $name): self
     {
@@ -174,8 +157,6 @@ class Backup
 
     /**
      * Get archive name.
-     *
-     * @return string
      */
     public function getArchiveName(): string
     {
@@ -188,8 +169,6 @@ class Backup
 
     /**
      * Full path to the archive file.
-     *
-     * @return string
      */
     public function archivePath(): string
     {
@@ -198,9 +177,6 @@ class Backup
 
     /**
      * Add new job.
-     *
-     * @param  \SSD\Backup\Jobs\Job $job
-     * @return self
      */
     public function addJob(Job $job): self
     {
@@ -211,8 +187,6 @@ class Backup
 
     /**
      * Get all jobs.
-     *
-     * @return array
      */
     public function getJobs(): array
     {
@@ -222,9 +196,6 @@ class Backup
     /**
      * Set number of backups
      * before overwriting.
-     *
-     * @param  int $number
-     * @return void
      */
     public function setNumberOfBackups(int $number): void
     {
@@ -233,8 +204,6 @@ class Backup
 
     /**
      * Get number of backups.
-     *
-     * @return int
      */
     public function getNumberOfBackups(): int
     {
@@ -243,8 +212,6 @@ class Backup
 
     /**
      * Execute backup.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -271,13 +238,12 @@ class Backup
      * Validate properties and segregate jobs.
      *
      * @throws InvalidArgumentException
-     * @return void
      */
     public function prepare(): void
     {
         if (
             is_null($this->localWorkingDir) ||
-            !is_dir($this->localWorkingDir)
+            ! is_dir($this->localWorkingDir)
         ) {
             throw new InvalidArgumentException('Invalid local working directory.');
         }
@@ -291,8 +257,6 @@ class Backup
 
     /**
      * Segregate jobs by its implementation.
-     *
-     * @return void
      */
     private function segregateJobs(): void
     {
@@ -305,8 +269,6 @@ class Backup
      * Assign job to the right collection.
      *
      * @throws InvalidArgumentException
-     * @param  Job $job
-     * @return void
      */
     private function assignJob(Job $job): void
     {
@@ -325,16 +287,11 @@ class Backup
         } else {
 
             throw new InvalidArgumentException('Job does not implement a valid contract.');
-
         }
     }
 
     /**
      * Add item to the collection.
-     *
-     * @param  array $item
-     * @param  string $namespace
-     * @return void
      */
     public function addToCollection(array $item, string $namespace): void
     {
@@ -343,8 +300,6 @@ class Backup
 
     /**
      * Get entire collection.
-     *
-     * @return array
      */
     public function getCollection(): array
     {
@@ -353,9 +308,6 @@ class Backup
 
     /**
      * Add file to the removal at clean up.
-     *
-     * @param  string $path
-     * @return void
      */
     public function addToRemoval(string $path): void
     {
@@ -364,8 +316,6 @@ class Backup
 
     /**
      * Get removal collection
-     *
-     * @return array
      */
     public function getRemoval(): array
     {
@@ -374,8 +324,6 @@ class Backup
 
     /**
      * Reset collection array.
-     *
-     * @return void
      */
     public function resetCollection(): void
     {
@@ -384,8 +332,6 @@ class Backup
 
     /**
      * Export all databases.
-     *
-     * @return void
      */
     public function processDatabases(): void
     {
@@ -404,8 +350,6 @@ class Backup
 
     /**
      * Collect all single files.
-     *
-     * @return void
      */
     public function processFiles(): void
     {
@@ -423,8 +367,6 @@ class Backup
 
     /**
      * Collect all directories recursively.
-     *
-     * @return void
      */
     public function processDirectories(): void
     {
@@ -442,8 +384,6 @@ class Backup
 
     /**
      * Archive collection.
-     *
-     * @return void
      */
     private function archive(): void
     {
@@ -457,8 +397,6 @@ class Backup
 
     /**
      * Send archive to the repository.
-     *
-     * @return void
      */
     private function send(): void
     {
@@ -469,8 +407,6 @@ class Backup
 
     /**
      * Remove all files.
-     *
-     * @return void
      */
     private function cleanup(): void
     {

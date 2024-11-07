@@ -2,45 +2,35 @@
 
 namespace SSD\Backup\Jobs;
 
-use SSD\Backup\Contracts\Job as JobContract;
-
 use InvalidArgumentException;
+use SSD\Backup\Contracts\Job as JobContract;
 
 abstract class Filesystem implements JobContract
 {
     /**
      * Absolute path with file / directory name.
-     *
-     * @var string
      */
     protected string $fullPath;
 
     /**
      * Absolute path to the root directory.
-     *
-     * @var string|null
      */
     protected ?string $rootPath;
 
     /**
      * Filesystem constructor.
-     *
-     * @param string $fullPath
-     * @param string|null $rootPath
      */
-    public function __construct(string $fullPath, string $rootPath = null)
+    public function __construct(string $fullPath, ?string $rootPath = null)
     {
         $this->setFullPath($fullPath);
 
-        !is_null($rootPath)
+        ! is_null($rootPath)
             ? $this->setRootPath($rootPath)
             : $this->rootPath = null;
     }
 
     /**
      * Extract and return asset path starting from root directory.
-     *
-     * @return string
      */
     public function asset(): string
     {
@@ -57,15 +47,11 @@ abstract class Filesystem implements JobContract
 
     /**
      * Set full path.
-     *
-     * @param string $fullPath
      */
     abstract public function setFullPath(string $fullPath): void;
 
     /**
      * Get full path.
-     *
-     * @return string
      */
     public function getFullPath(): string
     {
@@ -74,12 +60,10 @@ abstract class Filesystem implements JobContract
 
     /**
      * Set root path.
-     *
-     * @param string $rootPath
      */
     public function setRootPath(string $rootPath): void
     {
-        if (!is_dir($rootPath)) {
+        if (! is_dir($rootPath)) {
             throw new InvalidArgumentException(sprintf(
                 '%s is not a valid directory.', $rootPath
             ));
@@ -90,8 +74,6 @@ abstract class Filesystem implements JobContract
 
     /**
      * Get root path.
-     *
-     * @return string
      */
     public function getRootPath(): string
     {

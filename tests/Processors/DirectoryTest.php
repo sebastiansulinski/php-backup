@@ -2,17 +2,16 @@
 
 namespace SSDTest\Processors;
 
-use SSDTest\BaseCase;
+use PHPUnit\Framework\Attributes\Test;
 use SSD\Backup\Backup;
-use SSD\Backup\Jobs\Job;
 use SSD\Backup\Jobs\Directory as DirectoryJob;
+use SSD\Backup\Jobs\Job;
+use SSDTest\BaseCase;
 
 class DirectoryTest extends BaseCase
 {
-    /**
-     * @test
-     */
-    public function adds_directory_to_collection()
+    #[Test]
+    public function adds_directory_to_collection(): void
     {
         $backup = new Backup(
             $this->dropboxInstance(),
@@ -41,10 +40,8 @@ class DirectoryTest extends BaseCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function adds_directory_to_collection_with_exclusion()
+    #[Test]
+    public function adds_directory_to_collection_with_exclusion(): void
     {
         $backup = new Backup(
             $this->dropboxInstance(),
@@ -55,7 +52,7 @@ class DirectoryTest extends BaseCase
                 $this->cssDirectory(),
                 $this->assets(),
                 [
-                    $this->cssComponentsDirectory()
+                    $this->cssComponentsDirectory(),
                 ]
             ),
             'directories'

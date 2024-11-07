@@ -2,17 +2,16 @@
 
 namespace SSDTest\Processors;
 
-use SSDTest\BaseCase;
+use PHPUnit\Framework\Attributes\Test;
 use SSD\Backup\Backup;
-use SSD\Backup\Jobs\Job;
 use SSD\Backup\Jobs\File as FileJob;
+use SSD\Backup\Jobs\Job;
+use SSDTest\BaseCase;
 
 class FileTest extends BaseCase
 {
-    /**
-     * @test
-     */
-    public function adds_file_to_collection()
+    #[Test]
+    public function adds_file_to_collection(): void
     {
         $backup = new Backup(
             $this->dropboxInstance(),

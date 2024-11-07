@@ -16,8 +16,6 @@ class Cleanup implements Processor
 
     /**
      * Cleanup constructor.
-     *
-     * @param \SSD\Backup\Backup $backup
      */
     public function __construct(Backup $backup)
     {
@@ -26,14 +24,12 @@ class Cleanup implements Processor
 
     /**
      * Execute cleanup.
-     *
-     * @return void
      */
     public function execute(): void
     {
         foreach ($this->backup->getRemoval() as $file) {
 
-            if (!is_file($file)) {
+            if (! is_file($file)) {
                 continue;
             }
 
@@ -45,8 +41,6 @@ class Cleanup implements Processor
 
     /**
      * Remove old backup files.
-     *
-     * @return void
      */
     public function clearOutdated(): void
     {

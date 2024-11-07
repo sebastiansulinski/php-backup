@@ -3,30 +3,24 @@
 namespace SSD\Backup\Remotes;
 
 use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
+use League\Flysystem\Ftp\FtpAdapter;
+use League\Flysystem\Ftp\FtpConnectionOptions;
 
 class Ftp extends Remote
 {
     /**
      * Configuration settings.
-     *
-     * @var array
      */
-    private $config = [
+    private array $config = [
         'port' => 21,
         'root' => '',
         'passive' => true,
         'ssl' => false,
-        'timeout' => 30
+        'timeout' => 30,
     ];
 
     /**
      * Ftp constructor.
-     *
-     * @param string $host
-     * @param string $username
-     * @param string $password
-     * @param array $other
      */
     public function __construct(string $host, string $username, string $password, array $other = [])
     {
@@ -34,10 +28,12 @@ class Ftp extends Remote
         $this->config['username'] = $username;
         $this->config['password'] = $password;
 
-        if (!empty($other)) {
+        if (! empty($other)) {
             $this->config = array_replace($this->config, $other);
         }
 
-        $this->remote = new Filesystem(new FtpAdapter($this->config));
+        $this->remote = new Filesystem(
+            new FtpAdapter(FtpConnectionOptions::fromArray($this->config))
+        );
     }
 }

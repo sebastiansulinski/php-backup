@@ -2,20 +2,17 @@
 
 namespace SSD\Backup\Jobs;
 
-use SSD\Backup\Contracts\File as FileContract;
-
 use InvalidArgumentException;
+use SSD\Backup\Contracts\File as FileContract;
 
 class File extends Filesystem implements FileContract
 {
     /**
      * Set full path.
-     *
-     * @param string $fullPath
      */
-    public function setFullPath(string $fullPath) : void
+    public function setFullPath(string $fullPath): void
     {
-        if (!is_file($fullPath)) {
+        if (! is_file($fullPath)) {
             throw new InvalidArgumentException("{$fullPath} is not a valid file.");
         }
 

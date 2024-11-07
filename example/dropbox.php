@@ -1,21 +1,20 @@
 <?php
 
-require "../vendor/autoload.php";
+require '../vendor/autoload.php';
 
-use SSD\Backup\Backup;
-use SSD\Backup\Jobs\Job;
-use SSD\Backup\Jobs\File;
-use SSD\Backup\Jobs\Directory;
-use SSD\Backup\Remotes\Dropbox;
-use SSD\Backup\Jobs\MySQLDatabase;
-
-use SSD\DotEnv\DotEnv;
 use Illuminate\Filesystem\Filesystem;
+use SSD\Backup\Backup;
+use SSD\Backup\Jobs\Directory;
+use SSD\Backup\Jobs\File;
+use SSD\Backup\Jobs\Job;
+use SSD\Backup\Jobs\MySQLDatabase;
+use SSD\Backup\Remotes\Dropbox;
+use SSD\DotEnv\DotEnv;
 
 try {
 
     $dotenv = new DotEnv([
-        __DIR__ . '/.env'
+        __DIR__.'/.env',
     ]);
     $dotenv->load();
     $dotenv->required([
@@ -25,11 +24,11 @@ try {
         'DB_PORT',
         'DB_NAME',
         'DB_USER',
-        'DB_PASS'
+        'DB_PASS',
     ]);
 
     // working directory
-    $workingDirectory = __DIR__ . '/tmp';
+    $workingDirectory = __DIR__.'/tmp';
 
     $remote = new Dropbox(
         getenv('DROPBOX_OAUTH')
@@ -52,7 +51,7 @@ try {
             'host' => getenv('DB_HOST'),
             'name' => getenv('DB_NAME'),
             'user' => getenv('DB_USER'),
-            'password' => getenv('DB_PASS')
+            'password' => getenv('DB_PASS'),
         ]),
         'database'
     ));
@@ -60,7 +59,7 @@ try {
     // add single file ot the backup
     $backup->addJob(new Job(
         new File(
-            __DIR__ . '/files/text.txt',
+            __DIR__.'/files/text.txt',
             __DIR__
         )
     ));
@@ -68,10 +67,10 @@ try {
     // add the entire directory to the backup
     $backup->addJob(new Job(
         new Directory(
-            __DIR__ . '/files',
+            __DIR__.'/files',
             __DIR__,
             [
-                'files/css'
+                'files/css',
             ]
         )
     ));
@@ -86,8 +85,8 @@ try {
     $filesystem->cleanDirectory($workingDirectory);
 
     $filesystem->prepend(
-        $workingDirectory . DIRECTORY_SEPARATOR . 'error_log',
-        $e->getMessage() . PHP_EOL
+        $workingDirectory.DIRECTORY_SEPARATOR.'error_log',
+        $e->getMessage().PHP_EOL
     );
 
 }

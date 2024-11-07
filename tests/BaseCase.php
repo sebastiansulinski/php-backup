@@ -2,33 +2,24 @@
 
 namespace SSDTest;
 
-
-use SSD\Backup\Remotes\Ftp;
-use SSD\Backup\Remotes\Dropbox;
-
 use PHPUnit\Framework\TestCase;
+use SSD\Backup\Remotes\Dropbox;
+use SSD\Backup\Remotes\Ftp;
 
 abstract class BaseCase extends TestCase
 {
     /**
      * Invalid path.
-     *
-     * @var int
      */
-    protected $invalid = 0;
+    protected int $invalid = 0;
 
     /**
      * Files to remove on tearDown
-     *
-     * @var array
      */
-    protected $removeFiles = [];
-
+    protected array $removeFiles = [];
 
     /**
      * Get assets path.
-     *
-     * @return string
      */
     protected function assets(): string
     {
@@ -37,8 +28,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Get working path.
-     *
-     * @return string
      */
     protected function working(): string
     {
@@ -47,8 +36,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Absolute path to the 'terms.txt' file.
-     *
-     * @return string
      */
     protected function termsFile(): string
     {
@@ -57,8 +44,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Absolute path to the 'css' directory.
-     *
-     * @return string
      */
     protected function cssDirectory(): string
     {
@@ -67,8 +52,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Absolute path to the 'app.css' file inside 'css' directory.
-     *
-     * @return string
      */
     protected function cssFile(): string
     {
@@ -77,8 +60,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Absolute path to the 'css' directory.
-     *
-     * @return string
      */
     protected function cssComponentsDirectory(): string
     {
@@ -87,8 +68,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Absolute path to the 'app.css' file inside 'css' directory.
-     *
-     * @return string
      */
     protected function cssComponentsFile(): string
     {
@@ -97,9 +76,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Archive path with file name.
-     *
-     * @param  string $name
-     * @return string
      */
     protected function archivePath(string $name): string
     {
@@ -108,9 +84,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Add file to the removal array.
-     *
-     * @param  string $file
-     * @return void
      */
     protected function addFileToRemove(string $file): void
     {
@@ -119,8 +92,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Remove any generated files.
-     *
-     * @return void
      */
     protected function tearDown(): void
     {
@@ -129,7 +100,7 @@ abstract class BaseCase extends TestCase
         }
 
         foreach ($this->removeFiles as $file) {
-            if (!is_file($file)) {
+            if (! is_file($file)) {
                 continue;
             }
             unlink($file);
@@ -138,8 +109,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Get Dropbox object instance.
-     *
-     * @return \SSD\Backup\Remotes\Dropbox
      */
     protected function dropboxInstance(): Dropbox
     {
@@ -148,8 +117,6 @@ abstract class BaseCase extends TestCase
 
     /**
      * Get Ftp object instance.
-     *
-     * @return \SSD\Backup\Remotes\Ftp
      */
     protected function ftpInstance(): Ftp
     {

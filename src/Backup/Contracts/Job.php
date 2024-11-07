@@ -2,6 +2,4 @@
 
 namespace SSD\Backup\Contracts;
 
-interface Job
-{
-}
+interface Job {}

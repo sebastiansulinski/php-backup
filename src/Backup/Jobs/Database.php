@@ -2,11 +2,10 @@
 
 namespace SSD\Backup\Jobs;
 
-use SSD\Backup\Contracts\Job as JobContract;
-
 use Carbon\Carbon;
-use ReflectionClass;
 use InvalidArgumentException;
+use ReflectionClass;
+use SSD\Backup\Contracts\Job as JobContract;
 
 abstract class Database implements JobContract
 {
@@ -54,8 +53,6 @@ abstract class Database implements JobContract
 
     /**
      * Database constructor.
-     *
-     * @param array $props
      */
     public function __construct(array $props = [])
     {
@@ -68,8 +65,6 @@ abstract class Database implements JobContract
 
     /**
      * Set properties.
-     *
-     * @param array $props
      */
     public function setProperties(array $props): void
     {
@@ -77,7 +72,7 @@ abstract class Database implements JobContract
 
         foreach ($props as $key => $value) {
 
-            if (!$reflection->hasProperty($key)) {
+            if (! $reflection->hasProperty($key)) {
                 throw new InvalidArgumentException("Property {$key} is invalid.");
             }
 
@@ -87,16 +82,11 @@ abstract class Database implements JobContract
 
     /**
      * Database type.
-     *
-     * @return string
      */
     abstract public function type(): string;
 
     /**
      * Set database host.
-     *
-     * @param  string $host
-     * @return self
      */
     public function setHost(string $host): self
     {
@@ -107,9 +97,6 @@ abstract class Database implements JobContract
 
     /**
      * Set database name.
-     *
-     * @param  string $name
-     * @return self
      */
     public function setName(string $name): self
     {
@@ -120,9 +107,6 @@ abstract class Database implements JobContract
 
     /**
      * Set database username.
-     *
-     * @param  string $user
-     * @return self
      */
     public function setUser(string $user): self
     {
@@ -133,9 +117,6 @@ abstract class Database implements JobContract
 
     /**
      * Set database password.
-     *
-     * @param  string $password
-     * @return self
      */
     public function setPassword(string $password): self
     {
@@ -146,9 +127,6 @@ abstract class Database implements JobContract
 
     /**
      * Set database port.
-     *
-     * @param  int $port
-     * @return self
      */
     public function setPort(int $port): self
     {
@@ -159,9 +137,6 @@ abstract class Database implements JobContract
 
     /**
      * Set export file name.
-     *
-     * @param  string $name
-     * @return self
      */
     public function setFileName(string $name): self
     {
@@ -172,8 +147,6 @@ abstract class Database implements JobContract
 
     /**
      * Get export file name.
-     *
-     * @return string
      */
     public function fileName(): string
     {
@@ -186,8 +159,6 @@ abstract class Database implements JobContract
 
     /**
      * Check if all properties have values.
-     *
-     * @return bool
      */
     public function isValid(): bool
     {
@@ -196,8 +167,6 @@ abstract class Database implements JobContract
 
     /**
      * Filter non empty properties.
-     *
-     * @return array
      */
     private function filterProperties(): array
     {
@@ -207,10 +176,10 @@ abstract class Database implements JobContract
                 $this->name,
                 $this->user,
                 $this->password,
-                $this->port
+                $this->port,
             ],
             function ($item) {
-                return !empty($item);
+                return ! empty($item);
             }
         );
     }
