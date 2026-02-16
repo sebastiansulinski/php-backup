@@ -1,5 +1,8 @@
 # PHP Backup
 
+> **Warning**
+> This package is deprecated and no longer maintained.
+
 A simple package for backing up mysql databases, files and directories to Dropbox and FTP.
 
 This package makes use of

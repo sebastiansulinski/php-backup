@@ -23,6 +23,7 @@
     "ext-zip": "*",
     "laravel/pint": "^1.18"
   },
+  "abandoned": true,
   "autoload": {
     "psr-4": {
       "SSD\\": "src/"
